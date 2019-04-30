@@ -11,6 +11,7 @@
 
         </Canvas>
         <Button Name="TestButton" Height="20" Width="50" Canvas.Top="10" Canvas.Left="10" Content="test"></Button>
+        <TextBlock Name="ScoreBox" Canvas.Top="10" Canvas.Right="10"></TextBlock>
     </Canvas>
     
 

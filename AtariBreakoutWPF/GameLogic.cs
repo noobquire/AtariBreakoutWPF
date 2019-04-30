@@ -16,6 +16,10 @@ namespace AtariBreakoutWPF
         private double width, height;
         private int ballCount;
 
+        public event EventHandler<ScoreChangedEventArgs> ScoreChanged;
+        public event EventHandler<GameOverEventArgs> GameOver;
+        public event EventHandler<BallDestroyedEventArgs> BallDestroyed; 
+
         public void SetBallSpeed(int newSpeed)
         {
             ball.Speed = newSpeed;
@@ -36,7 +40,7 @@ namespace AtariBreakoutWPF
 
         private void AddPaddle()
         {
-            paddle = new Paddle(80);
+            paddle = new Paddle(160);
             SetPosition(paddle.Shape, gameCanvas.Width / 2 - paddle.Width / 2, gameCanvas.Height - 60);
             gameCanvas.Children.Add(paddle.Shape);
         }
@@ -174,8 +178,9 @@ namespace AtariBreakoutWPF
             }
             else
             {
+                
                 MessageBox.Show($"Your score: {Score}", "Game Over", MessageBoxButton.OK); // TODO: finish and restart game after this message
-            }
+            } // TODO: message should probably be moved to MainWindow.xaml.cs
 
         }
 
@@ -192,7 +197,7 @@ namespace AtariBreakoutWPF
             gameCanvas.Children.Remove(brick.Shape);
             brick.Shape = null;
             bricks.Remove(brick);
-
+            ScoreChanged?.Invoke(this, new ScoreChangedEventArgs(Score));
         }
 
         public void AddBricksRow(Brush colorBrush, int height, int score)

@@ -22,13 +22,7 @@ namespace AtariBreakoutWPF
 
         public readonly double Height = 20;
 
-        public Point Position
-        {
-            get
-            {
-                return new Point((double)Shape.GetValue(Canvas.LeftProperty), (double)Shape.GetValue(Canvas.TopProperty));
-            }
-        }
+        public Point Position => new Point((double)Shape.GetValue(Canvas.LeftProperty), (double)Shape.GetValue(Canvas.TopProperty));
 
         public Paddle(int width)
         {

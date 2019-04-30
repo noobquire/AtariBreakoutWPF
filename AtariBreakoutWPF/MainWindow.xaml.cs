@@ -21,12 +21,13 @@ namespace AtariBreakoutWPF
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             InitializeComponent();
             
-            paddleTimer = new DispatcherTimer(new TimeSpan(100000), DispatcherPriority.Background, (sender, args) => logic.MovePaddle(direction), Dispatcher);
+            paddleTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(0.7), DispatcherPriority.Background, (sender, args) => logic.MovePaddle(direction), Dispatcher);
             logic = new GameLogic(GameCanvas);
             DispatcherTimer ballTimer = new DispatcherTimer(new TimeSpan(70000), DispatcherPriority.Background, (sender, args) => logic.MoveBall(), Dispatcher);
             ballTimer.Start();
             KeyDown += Game_OnKeyDown;
             KeyUp += Game_OnKeyUp;
+            logic.ScoreChanged += Game_OnScoreChanged;
             TestButton.Click += (s, e) =>
             {
                 if (logic.ball.Speed != 0)
@@ -39,7 +40,11 @@ namespace AtariBreakoutWPF
                 }
             };
         }
-        
+
+        private void Game_OnScoreChanged(object sender, ScoreChangedEventArgs e)
+        {
+            ScoreBox.Text = e.NewScore.ToString();
+        }
         private void Game_OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Left)
