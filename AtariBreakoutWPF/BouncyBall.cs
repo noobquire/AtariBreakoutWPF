@@ -11,6 +11,7 @@ namespace AtariBreakoutWPF
         public Vector MoveVector { get; private set; }
         public Ellipse Ball { get; set; }
         public int Speed { get; set; }
+
         public BouncyBall(Vector moveVector, Ellipse ball, int speed)
         {
             MoveVector = moveVector;
@@ -23,7 +24,8 @@ namespace AtariBreakoutWPF
             Ball = null;
         }
 
-        public Point Position => new Point((double)Ball.GetValue(Canvas.LeftProperty), (double)Ball.GetValue(Canvas.TopProperty));
+        public Point Position => new Point((double) Ball.GetValue(Canvas.LeftProperty),
+            (double) Ball.GetValue(Canvas.TopProperty));
 
         public void Bounce(Direction direction)
         {
@@ -48,7 +50,6 @@ namespace AtariBreakoutWPF
                 StrokeThickness = 2,
                 Stroke = Brushes.DarkCyan,
                 Fill = Brushes.DarkRed,
-
             };
             Speed = 5;
         }
@@ -58,9 +59,38 @@ namespace AtariBreakoutWPF
             return ball.Ball;
         }
 
-        public void BounceOffPaddle(double distanceFromCenterOfPaddle, Direction direction)
+        public void BounceOffPaddle(double distanceFromCenterOfPaddle, Direction direction, double paddleWidth)
         {
-            Bounce(direction); // TODO: diffrent angles depending on dfcop
+            //Bounce(direction); // TODO: diffrent angles depending on dfcop
+            double coefficient = distanceFromCenterOfPaddle / (paddleWidth / 2); // must be from 0 to 1
+            Vector i = new Vector(1, 0);
+            double fallAngle = Vector.AngleBetween(i, MoveVector);
+            double bounceAngle = fallAngle > 90
+                ? 45 * (coefficient + 1) // 90 <= fallAngle <= 135
+                : 45 * (coefficient + 2); // 45 <= fallAngle < 90
+
+            if (bounceAngle > 135) bounceAngle = 135;
+            if (bounceAngle < 45) bounceAngle = 45;
+
+            double bounceAngleInRad = (bounceAngle * Math.PI) / 180;
+            Vector bounceVector;
+
+            if (direction == Direction.Horizontal)
+            {
+                double bounceVectorX = Math.Sin(bounceAngleInRad);
+                double bounceVectorY = Math.Cos(bounceAngleInRad);
+
+                bounceVector = new Vector(bounceVectorX, bounceVectorY);
+            }
+            else
+            {
+                double bounceVectorX = Math.Cos(bounceAngleInRad);
+                double bounceVectorY = Math.Sin(bounceAngleInRad);
+
+                bounceVector = new Vector(bounceVectorX, bounceVectorY);
+            }
+
+            MoveVector = bounceVector;
         }
     }
 }
