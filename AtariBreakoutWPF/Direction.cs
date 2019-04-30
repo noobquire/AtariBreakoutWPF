@@ -9,12 +9,12 @@ namespace AtariBreakoutWPF
     [Flags]
     public enum Direction
     {
-        Up,
-        Down,
-        Left,
-        Right,
+        Default = 0,
+        Up = 1,
+        Down = 2,
+        Left = 4,
+        Right = 8,
         Horizontal = Up | Down,
         Vertical = Left | Right,
-        Default
     }
 }

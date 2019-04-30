@@ -21,7 +21,7 @@ namespace AtariBreakoutWPF
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             InitializeComponent();
             
-            paddleTimer = new DispatcherTimer(new TimeSpan(200000), DispatcherPriority.Background, (sender, args) => logic.MovePaddle(direction), Dispatcher);
+            paddleTimer = new DispatcherTimer(new TimeSpan(100000), DispatcherPriority.Background, (sender, args) => logic.MovePaddle(direction), Dispatcher);
             logic = new GameLogic(GameCanvas);
             DispatcherTimer ballTimer = new DispatcherTimer(new TimeSpan(70000), DispatcherPriority.Background, (sender, args) => logic.MoveBall(), Dispatcher);
             ballTimer.Start();

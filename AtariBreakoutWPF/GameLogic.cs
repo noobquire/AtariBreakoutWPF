@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 
 namespace AtariBreakoutWPF
 {
@@ -109,14 +107,14 @@ namespace AtariBreakoutWPF
         {
             double centerOfPaddleX = paddle.Position.X - (paddle.Width / 2);
             double distanceFromCenterOfPaddle =
-                Math.Abs(centerOfPaddleX - newPosition.X - ball.Ball.Width); // TODO: think about it more
-            if (CollidesWithPaddleHorizontal(newPosition) && CollidesWithPaddleVertical(newPosition))
+                Math.Abs(centerOfPaddleX - newPosition.X - ball.Ball.Width); // TODO: fix dfcop calculation
+            if (CollidesWithPaddleHorizontal(newPosition, paddle.Position) && CollidesWithPaddleVertical(newPosition, paddle.Position))
             {
-                if (CollidesWithPaddleHorizontal(oldPosition) && !CollidesWithPaddleVertical(oldPosition))
+                if (CollidesWithPaddleHorizontal(oldPosition, paddle.Position) && !CollidesWithPaddleVertical(oldPosition, paddle.Position))
                 {
                     ball.BounceOffPaddle(distanceFromCenterOfPaddle, Direction.Vertical);
                 }
-                else if (CollidesWithPaddleVertical(oldPosition) && !CollidesWithPaddleHorizontal(oldPosition))
+                else if (CollidesWithPaddleVertical(oldPosition, paddle.Position) && !CollidesWithPaddleHorizontal(oldPosition, paddle.Position))
                 {
                     ball.BounceOffPaddle(distanceFromCenterOfPaddle, Direction.Horizontal);
                 }
@@ -129,14 +127,14 @@ namespace AtariBreakoutWPF
             }
         }
 
-        private bool CollidesWithPaddleVertical(Point ballPosition)
+        private bool CollidesWithPaddleVertical(Point ballPosition, Point paddlePosition)
         {
-            return ballPosition.X >= paddle.Position.X - ball.Ball.Width && ballPosition.X <= paddle.Position.X + paddle.Width;
+            return ballPosition.X >= paddlePosition.X - ball.Ball.Width && ballPosition.X <= paddlePosition.X + paddle.Width;
         }
 
-        private bool CollidesWithPaddleHorizontal(Point ballPosition)
+        private bool CollidesWithPaddleHorizontal(Point ballPosition, Point paddlePosition)
         {
-            return ballPosition.Y >= paddle.Position.Y - ball.Ball.Height && ballPosition.Y <= paddle.Position.Y + paddle.Height;
+            return ballPosition.Y >= paddlePosition.Y - ball.Ball.Height && ballPosition.Y <= paddlePosition.Y + paddle.Height;
         }
 
         private void CheckWallCollision(Point newPosition)
@@ -199,7 +197,7 @@ namespace AtariBreakoutWPF
 
         public void AddBricksRow(Brush colorBrush, int height, int score)
         {
-            // TODO algorithm to generate bricks depending on gameCanvas size
+            // TODO: algorithm to generate bricks depending on gameCanvas size
             int numberOfBricks = 10;
             int distanceBetweenBricks = 10;
             int currentX = 5;
@@ -214,14 +212,15 @@ namespace AtariBreakoutWPF
         }
 
         public void MovePaddle(Direction direction)
-        { // TODO: add check for collision with ball
+        { 
             Point oldPosition = paddle.Position;
             if (direction == Direction.Left)
             {
-
                 Point newPositon = new Point(oldPosition.X - 3,
                     oldPosition.Y);
-                if (newPositon.X < gameCanvas.Width - paddle.Width && newPositon.X > 0)
+                if(CollidesWithPaddleHorizontal(ball.Position, newPositon) 
+                   && CollidesWithPaddleVertical(ball.Position, newPositon)) return;
+                if (newPositon.X < gameCanvas.Width - paddle.Width && newPositon.X > 0 )
                 {
                     SetPosition(paddle.Shape, newPositon);
                 }
@@ -231,6 +230,8 @@ namespace AtariBreakoutWPF
             {
                 Point newPositon = new Point(oldPosition.X + 3,
                     oldPosition.Y);
+                if (CollidesWithPaddleHorizontal(ball.Position, newPositon)
+                    && CollidesWithPaddleVertical(ball.Position, newPositon)) return;
                 if (newPositon.X < gameCanvas.Width - paddle.Width && newPositon.X > 0)
                 {
                     SetPosition(paddle.Shape, newPositon);
