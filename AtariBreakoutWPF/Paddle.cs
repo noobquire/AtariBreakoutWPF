@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -12,17 +7,7 @@ namespace AtariBreakoutWPF
 {
     public sealed class Paddle
     {
-        public Rectangle Shape { get; }
-
-        public double Width
-        {
-            get => Shape.Width;
-            set => Shape.Width = value;
-        }
-
         public readonly double Height = 20;
-
-        public Point Position => new Point((double)Shape.GetValue(Canvas.LeftProperty), (double)Shape.GetValue(Canvas.TopProperty));
 
         public Paddle(int width)
         {
@@ -32,8 +17,19 @@ namespace AtariBreakoutWPF
                 Height = Height,
                 StrokeThickness = 2,
                 Stroke = Brushes.DarkBlue,
-                Fill = Brushes.DimGray,
+                Fill = Brushes.DimGray
             };
         }
+
+        public Rectangle Shape { get; }
+
+        public double Width
+        {
+            get => Shape.Width;
+            set => Shape.Width = value;
+        }
+
+        public Point Position => new Point((double) Shape.GetValue(Canvas.LeftProperty),
+            (double) Shape.GetValue(Canvas.TopProperty));
     }
 }

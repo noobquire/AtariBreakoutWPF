@@ -2,13 +2,13 @@
 
 namespace AtariBreakoutWPF
 {
-    class BallDestroyedEventArgs : EventArgs    
+    public sealed class BallDestroyedEventArgs : EventArgs
     {
-        public int NewBallCount { get; }
-
         public BallDestroyedEventArgs(int newBallCount)
         {
             NewBallCount = newBallCount;
         }
+
+        public int NewBallCount { get; }
     }
 }

@@ -2,13 +2,13 @@
 
 namespace AtariBreakoutWPF
 {
-    class GameOverEventArgs : EventArgs
+    public sealed class GameOverEventArgs : EventArgs
     {
-        public int FinalScore { get; }
-
         public GameOverEventArgs(int finalScore)
         {
             FinalScore = finalScore;
         }
+
+        public int FinalScore { get; }
     }
 }

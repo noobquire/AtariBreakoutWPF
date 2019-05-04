@@ -7,15 +7,13 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="950">
     <Canvas Name="MainCanvas">
-        <Canvas Background="AliceBlue" Name="GameCanvas" Height="450" Width="800" Top="50" Left="75">
-
-        </Canvas>
-        <Button Name="TestButton" Height="20" Width="50" Canvas.Top="10" Canvas.Left="10" Content="pause"></Button>
-        <TextBlock Name="Score" Canvas.Top="10" Canvas.Right="10" Text="Score: 0" FontWeight="Bold" FontSize="25"></TextBlock>
-        <Ellipse Name="BallCountEllipse" Canvas.Top="10" Canvas.Left="70" Width="20" Height="20" Fill="DarkRed" Stroke="Aquamarine"></Ellipse>
-        <TextBlock Name="BallCount" Text="x5" Canvas.Top="12" Canvas.Left="95" FontWeight="Bold"></TextBlock>
+        <Canvas Background="AliceBlue" Name="GameCanvas" Height="450" Width="800" Top="50" Left="75" />
+        <Button Name="TestButton" Height="20" Width="50" Canvas.Top="10" Canvas.Left="10" Content="pause" />
+        <TextBlock Name="Score" Canvas.Top="10" Canvas.Right="10" Text="Score: 0" FontWeight="Bold" FontSize="25" />
+        <Ellipse Name="BallCountEllipse" Canvas.Top="10" Canvas.Left="70" Width="20" Height="20" Fill="DarkRed"
+                 Stroke="Aquamarine" />
+        <TextBlock Name="BallCount" Text="x5" Canvas.Top="12" Canvas.Left="95" FontWeight="Bold" />
     </Canvas>
-    
 
 
 </Window>

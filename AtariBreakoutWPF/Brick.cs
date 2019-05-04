@@ -7,24 +7,27 @@ namespace AtariBreakoutWPF
 {
     public sealed class Brick
     {
-        public Rectangle Shape { get; set; }
         public static readonly int Width = 70;
         public static readonly int Height = 20;
         public readonly int ScoreForDestruction;
-        public Point Position => new Point((double)Shape.GetValue(Canvas.LeftProperty), (double)Shape.GetValue(Canvas.TopProperty));
 
         public Brick(Brush colorBrush, int score)
         {
-            Shape = new Rectangle()
+            Shape = new Rectangle
             {
                 Width = Width,
                 Height = Height,
                 Fill = colorBrush,
                 StrokeThickness = 2,
-                Stroke = Brushes.Black,
+                Stroke = Brushes.Black
             };
             ScoreForDestruction = score;
         }
+
+        public Rectangle Shape { get; set; }
+
+        public Point Position => new Point((double) Shape.GetValue(Canvas.LeftProperty),
+            (double) Shape.GetValue(Canvas.TopProperty));
 
         public static implicit operator Rectangle(Brick brick)
         {

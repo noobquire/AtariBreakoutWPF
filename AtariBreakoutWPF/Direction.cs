@@ -11,6 +11,6 @@ namespace AtariBreakoutWPF
         Left = 4,
         Right = 8,
         Horizontal = Up | Down,
-        Vertical = Left | Right,
+        Vertical = Left | Right
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -8,36 +9,11 @@ namespace AtariBreakoutWPF
 {
     public sealed class BouncyBall
     {
-        public Vector MoveVector { get; private set; }
-        public Ellipse Ball { get; set; }
-        public int Speed { get; set; }
-
         public BouncyBall(Vector moveVector, Ellipse ball, int speed)
         {
             MoveVector = moveVector;
             Ball = ball;
             Speed = speed;
-        }
-
-        ~BouncyBall()
-        {
-            Ball = null;
-        }
-
-        public Point Position => new Point((double) Ball.GetValue(Canvas.LeftProperty),
-            (double) Ball.GetValue(Canvas.TopProperty));
-
-        public void Bounce(Direction direction)
-        {
-            if (direction == Direction.Horizontal)
-            {
-                MoveVector = new Vector(MoveVector.X, -MoveVector.Y);
-            }
-
-            if (direction == Direction.Vertical)
-            {
-                MoveVector = new Vector(-MoveVector.X, MoveVector.Y);
-            }
         }
 
         public BouncyBall()
@@ -49,9 +25,28 @@ namespace AtariBreakoutWPF
                 Width = 20,
                 StrokeThickness = 2,
                 Stroke = Brushes.DarkCyan,
-                Fill = Brushes.DarkRed,
+                Fill = Brushes.DarkRed
             };
             Speed = 5;
+        }
+
+        public Vector MoveVector { get; private set; }
+        public Ellipse Ball { get; set; }
+        public int Speed { get; set; }
+
+        public Point Position => new Point((double) Ball.GetValue(Canvas.LeftProperty),
+            (double) Ball.GetValue(Canvas.TopProperty));
+
+        ~BouncyBall()
+        {
+            Ball = null;
+        }
+
+        public void Bounce(Direction direction)
+        {
+            if (direction == Direction.Horizontal) MoveVector = new Vector(MoveVector.X, -MoveVector.Y);
+
+            if (direction == Direction.Vertical) MoveVector = new Vector(-MoveVector.X, MoveVector.Y);
         }
 
         public static implicit operator Ellipse(BouncyBall ball)
@@ -61,31 +56,36 @@ namespace AtariBreakoutWPF
 
         public void BounceOffPaddle(double distanceFromCenterOfPaddle, Direction direction, double paddleWidth)
         {
-            //Bounce(direction); // TODO: diffrent angles depending on dfcop
-            double coefficient = distanceFromCenterOfPaddle / (paddleWidth / 2); // must be from 0 to 1
-            Vector i = new Vector(1, 0);
-            double fallAngle = Vector.AngleBetween(i, MoveVector);
-            double bounceAngle = fallAngle > 90
-                ? 45 * (coefficient + 1) // 90 <= fallAngle <= 135
-                : 45 * (coefficient + 2); // 45 <= fallAngle < 90
+            var coefficient = 1 - distanceFromCenterOfPaddle / (paddleWidth / 2); // must be from 0 to 1
+            var i = new Vector(1, 0);
+            var fallAngle = Math.Abs(Vector.AngleBetween(i, -MoveVector));
+            var bounceAngle = fallAngle >= 90
+                ? 45 * (coefficient + 1)
+                : 45 * (3 - coefficient);
 
-            if (bounceAngle > 135) bounceAngle = 135;
-            if (bounceAngle < 45) bounceAngle = 45;
-
-            double bounceAngleInRad = (bounceAngle * Math.PI) / 180;
+            var bounceAngleInRad = bounceAngle * Math.PI / 180;
             Vector bounceVector;
 
             if (direction == Direction.Horizontal)
             {
-                double bounceVectorX = Math.Sin(bounceAngleInRad);
-                double bounceVectorY = Math.Cos(bounceAngleInRad);
+                var bounceVectorX = Math.Cos(bounceAngleInRad);
+                var bounceVectorY = -Math.Sin(bounceAngleInRad);
 
                 bounceVector = new Vector(bounceVectorX, bounceVectorY);
+#if DEBUG
+                Debug.Assert(coefficient >= 0 && coefficient <= 1, "wrongly calculated bounce coefficient");
+                Console.WriteLine("Bouncing off paddle horizontally");
+                Console.WriteLine($"dfcop: {distanceFromCenterOfPaddle}");
+                Console.WriteLine($"cofficient: {coefficient}");
+                Console.WriteLine($"fall angle: {fallAngle}");
+                Console.WriteLine($"bounce angle: {bounceAngle}");
+                Console.WriteLine();
+#endif
             }
             else
             {
-                double bounceVectorX = Math.Cos(bounceAngleInRad);
-                double bounceVectorY = Math.Sin(bounceAngleInRad);
+                var bounceVectorX = -Math.Cos(bounceAngleInRad);
+                var bounceVectorY = Math.Sin(bounceAngleInRad);
 
                 bounceVector = new Vector(bounceVectorX, bounceVectorY);
             }
