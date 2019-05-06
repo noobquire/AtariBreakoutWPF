@@ -56,6 +56,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BallDestroyedEventArgs.cs" />
+    <Compile Include="GameCanvas.cs" />
+    <Compile Include="GameCanvasBuilder.cs" />
     <Compile Include="GameOverEventArgs.cs" />
     <Compile Include="ScoreChangedEventArgs.cs" />
     <Page Include="MainWindow.xaml">

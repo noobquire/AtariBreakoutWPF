@@ -9,17 +9,31 @@ namespace AtariBreakoutWPF
 {
     public sealed class BouncyBall
     {
-        public BouncyBall(Vector moveVector, Ellipse ball, int speed)
+        public Vector MoveVector { get; private set; }
+        public Ellipse Shape { get; set; }
+        public int Speed { get; set; }
+
+        public Point Position => new Point((double) Shape.GetValue(Canvas.LeftProperty),
+            (double) Shape.GetValue(Canvas.TopProperty));
+
+        public BouncyBall(Vector moveVector, int speed)
         {
             MoveVector = moveVector;
-            Ball = ball;
+            Shape = new Ellipse
+            {
+                Height = 20,
+                Width = 20,
+                StrokeThickness = 2,
+                Stroke = Brushes.DarkCyan,
+                Fill = Brushes.DarkRed
+            };
             Speed = speed;
         }
 
         public BouncyBall()
         {
             MoveVector = new Vector(1, 1);
-            Ball = new Ellipse
+            Shape = new Ellipse
             {
                 Height = 20,
                 Width = 20,
@@ -30,16 +44,10 @@ namespace AtariBreakoutWPF
             Speed = 5;
         }
 
-        public Vector MoveVector { get; private set; }
-        public Ellipse Ball { get; set; }
-        public int Speed { get; set; }
-
-        public Point Position => new Point((double) Ball.GetValue(Canvas.LeftProperty),
-            (double) Ball.GetValue(Canvas.TopProperty));
-
+        
         ~BouncyBall()
         {
-            Ball = null;
+            Shape = null;
         }
 
         public void Bounce(Direction direction)
@@ -51,7 +59,7 @@ namespace AtariBreakoutWPF
 
         public static implicit operator Ellipse(BouncyBall ball)
         {
-            return ball.Ball;
+            return ball.Shape;
         }
 
         public void BounceOffPaddle(double distanceFromCenterOfPaddle, Direction direction, double paddleWidth)

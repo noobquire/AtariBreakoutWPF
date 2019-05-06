@@ -35,12 +35,11 @@ namespace AtariBreakoutWPF
             _logic.ScoreChanged += Game_OnScoreChanged;
             _logic.BallDestroyed += Game_OnBallDestroyed;
             _logic.GameOver += Game_OnGameOver;
-            TestButton.Click += (s, e) => { _logic.SetBallSpeed(_logic.Ball.Speed != 0 ? 0 : 5); };
         }
 
         private void Game_OnGameOver(object sender, GameOverEventArgs e)
         {
-            MessageBox.Show($"Game over\r\nYour score: {_logic.Score}", "Game over", MessageBoxButton.OK,
+            MessageBox.Show($"Game over\r\nYour score: {e.FinalScore}", "Game over", MessageBoxButton.OK,
                 MessageBoxImage.Exclamation);
             _paddleTimer.Stop();
             _ballTimer.Stop();

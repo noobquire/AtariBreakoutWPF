@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -24,7 +25,7 @@ namespace AtariBreakoutWPF
             ScoreForDestruction = score;
         }
 
-        public Rectangle Shape { get; set; }
+        public Rectangle Shape;
 
         public Point Position => new Point((double) Shape.GetValue(Canvas.LeftProperty),
             (double) Shape.GetValue(Canvas.TopProperty));

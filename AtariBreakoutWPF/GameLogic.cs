@@ -8,29 +8,17 @@ namespace AtariBreakoutWPF
 {
     public sealed class GameLogic
     {
-        private readonly IList<Brick> _bricks;
-        private readonly double _height;
-        private readonly double _width;
-        private int _ballCount;
-        private Paddle _paddle;
-        public BouncyBall Ball; // TODO: set back to private
+        private GameCanvas _canvas;
+        private GameCanvasBuilder _gameCanvasBuilder;
 
         public GameLogic(Canvas gameCanvas)
         {
-            GameCanvas = gameCanvas;
-            Score = 0;
-            _ballCount = 5;
-            _bricks = new List<Brick>();
-            _width = gameCanvas.Width;
-            _height = gameCanvas.Height;
-
-            AddPaddle();
-            AddBall();
-            AddBricks();
+            _gameCanvasBuilder = new GameCanvasBuilder(gameCanvas);
+            _gameCanvasBuilder.AddPaddle();
+            _gameCanvasBuilder.AddBricks();
+            _gameCanvasBuilder.AddBall();
+            _canvas = _gameCanvasBuilder.Build();
         }
-
-        private Canvas GameCanvas { get; }
-        public int Score { get; set; }
 
         public event EventHandler<ScoreChangedEventArgs> ScoreChanged;
         public event EventHandler<GameOverEventArgs> GameOver;
@@ -38,32 +26,8 @@ namespace AtariBreakoutWPF
 
         public void SetBallSpeed(int newSpeed)
         {
-            Ball.Speed = newSpeed;
+            _canvas.Ball.Speed = newSpeed;
         }
-
-        private void AddPaddle()
-        {
-            _paddle = new Paddle(160);
-            SetPosition(_paddle.Shape, GameCanvas.Width / 2 - _paddle.Width / 2, GameCanvas.Height - 60);
-            GameCanvas.Children.Add(_paddle.Shape);
-        }
-
-        private void AddBricks()
-        {
-            AddBricksRow(Brushes.Red, 30, 7);
-            AddBricksRow(Brushes.Red, 60, 7);
-            AddBricksRow(Brushes.Yellow, 90, 5);
-            AddBricksRow(Brushes.Yellow, 120, 5);
-            AddBricksRow(Brushes.Green, 150, 3);
-            AddBricksRow(Brushes.Green, 180, 3);
-        }
-
-        private void SetPosition(UIElement element, double x, double y)
-        {
-            Canvas.SetTop(element, y);
-            Canvas.SetLeft(element, x);
-        }
-
         private void SetPosition(UIElement element, Point position)
         {
             Canvas.SetTop(element, position.Y);
@@ -72,9 +36,9 @@ namespace AtariBreakoutWPF
 
         public void MoveBall()
         {
-            var oldPosition = Ball.Position;
-            var newPosition = new Point(oldPosition.X + Ball.MoveVector.X * Ball.Speed,
-                oldPosition.Y + Ball.MoveVector.Y * Ball.Speed);
+            var oldPosition = _canvas.Ball.Position;
+            var newPosition = new Point(oldPosition.X + _canvas.Ball.MoveVector.X * _canvas.Ball.Speed,
+                oldPosition.Y + _canvas.Ball.MoveVector.Y * _canvas.Ball.Speed);
 
             CheckWallCollision(newPosition);
             CheckPaddleCollision(newPosition, oldPosition);
@@ -83,166 +47,143 @@ namespace AtariBreakoutWPF
 
         private void CheckBrickCollision(Point newPosition, Point oldPosition)
         {
-            for (var i = 0; i < _bricks.Count; i++)
+            for (var i = 0; i < _canvas.Bricks.Count; i++)
             {
-                var brick = _bricks[i];
+                var brick = _canvas.Bricks[i];
                 if (CollidesWithBrickHorizontal(newPosition, brick) && CollidesWithBrickVertical(newPosition, brick))
                 {
                     if (CollidesWithBrickHorizontal(oldPosition, brick) &&
                         !CollidesWithBrickVertical(oldPosition, brick))
-                        Ball.Bounce(Direction.Vertical);
+                        _canvas.Ball.Bounce(Direction.Vertical);
                     else if (CollidesWithBrickVertical(oldPosition, brick) &&
                              !CollidesWithBrickHorizontal(oldPosition, brick))
-                        Ball.Bounce(Direction.Horizontal);
+                        _canvas.Ball.Bounce(Direction.Horizontal);
 
-                    DestroyBrick(brick);
+                    _gameCanvasBuilder.DestroyBrick(brick);
                 }
             }
         }
 
         private bool CollidesWithBrickVertical(Point newPosition, Brick brick)
         {
-            return newPosition.X >= brick.Position.X - Ball.Ball.Width &&
+            return newPosition.X >= brick.Position.X - _canvas.Ball.Shape.Width &&
                    newPosition.X <= brick.Position.X + Brick.Width;
         }
 
         private bool CollidesWithBrickHorizontal(Point newPosition, Brick brick)
         {
-            return newPosition.Y >= brick.Position.Y - Ball.Ball.Width &&
+            return newPosition.Y >= brick.Position.Y - _canvas.Ball.Shape.Width &&
                    newPosition.Y <= brick.Position.Y + Brick.Height;
         }
 
         private void CheckPaddleCollision(Point newPosition, Point oldPosition)
         {
-            if (CollidesWithPaddleHorizontal(newPosition, _paddle.Position) &&
-                CollidesWithPaddleVertical(newPosition, _paddle.Position))
+            if (BallCollidesWithPaddle(newPosition))
             {
-                var centerOfPaddleX = _paddle.Position.X + _paddle.Width / 2;
-                double centerOfBallX;
+                var centerOfPaddleX = _canvas.Paddle.Position.X + _canvas.Paddle.Width / 2;
                 double distanceFromCenterOfPaddle;
 
-
-                if (CollidesWithPaddleHorizontal(oldPosition, _paddle.Position) &&
-                    !CollidesWithPaddleVertical(oldPosition, _paddle.Position))
+                if (BallCollidesWithPaddleVertically(oldPosition))
                 {
-                    distanceFromCenterOfPaddle = _paddle.Width / 2;
+                    distanceFromCenterOfPaddle = _canvas.Paddle.Width / 2;
 
-                    Ball.BounceOffPaddle(distanceFromCenterOfPaddle, Direction.Vertical, _paddle.Width);
+                    _canvas.Ball.BounceOffPaddle(distanceFromCenterOfPaddle, Direction.Vertical, _canvas.Paddle.Width);
                 }
-                else if (CollidesWithPaddleVertical(oldPosition, _paddle.Position) &&
-                         !CollidesWithPaddleHorizontal(oldPosition, _paddle.Position))
+                else if (BallCollidesWithPaddleHorizontally(oldPosition))
                 {
-                    centerOfBallX = Ball.Position.X + Ball.Ball.Width / 2;
+                    var centerOfBallX = _canvas.Ball.Position.X + _canvas.Ball.Shape.Width / 2;
                     distanceFromCenterOfPaddle = Math.Abs(centerOfPaddleX - centerOfBallX);
-                    if (distanceFromCenterOfPaddle > _paddle.Width / 2) distanceFromCenterOfPaddle = _paddle.Width / 2;
+                    if (distanceFromCenterOfPaddle > _canvas.Paddle.Width / 2) distanceFromCenterOfPaddle = _canvas.Paddle.Width / 2;
 
-                    Ball.BounceOffPaddle(distanceFromCenterOfPaddle, Direction.Horizontal, _paddle.Width);
+                    _canvas.Ball.BounceOffPaddle(distanceFromCenterOfPaddle, Direction.Horizontal, _canvas.Paddle.Width);
                 }
 
-                _paddle.Shape.Fill = Brushes.GreenYellow;
+                _canvas.Paddle.Shape.Fill = Brushes.GreenYellow;
             }
             else
             {
-                _paddle.Shape.Fill = Brushes.DimGray;
+                _canvas.Paddle.Shape.Fill = Brushes.DimGray;
             }
+        }
+
+        private bool BallCollidesWithPaddleHorizontally(Point oldPosition)
+        {
+            return CollidesWithPaddleVertical(oldPosition, _canvas.Paddle.Position) &&
+                   !CollidesWithPaddleHorizontal(oldPosition, _canvas.Paddle.Position);
+        }
+
+        private bool BallCollidesWithPaddleVertically(Point oldPosition)
+        {
+            return CollidesWithPaddleHorizontal(oldPosition, _canvas.Paddle.Position) &&
+                   !CollidesWithPaddleVertical(oldPosition, _canvas.Paddle.Position);
+        }
+
+        private bool BallCollidesWithPaddle(Point newPosition)
+        {
+            return CollidesWithPaddleHorizontal(newPosition, _canvas.Paddle.Position) &&
+                   CollidesWithPaddleVertical(newPosition, _canvas.Paddle.Position);
         }
 
         private bool CollidesWithPaddleVertical(Point ballPosition, Point paddlePosition)
         {
-            return ballPosition.X >= paddlePosition.X - Ball.Ball.Width &&
-                   ballPosition.X <= paddlePosition.X + _paddle.Width;
+            return ballPosition.X >= paddlePosition.X - _canvas.Ball.Shape.Width &&
+                   ballPosition.X <= paddlePosition.X + _canvas.Paddle.Width;
         }
 
         private bool CollidesWithPaddleHorizontal(Point ballPosition, Point paddlePosition)
         {
-            return ballPosition.Y >= paddlePosition.Y - Ball.Ball.Height &&
-                   ballPosition.Y <= paddlePosition.Y + _paddle.Height;
+            return ballPosition.Y >= paddlePosition.Y - _canvas.Ball.Shape.Height &&
+                   ballPosition.Y <= paddlePosition.Y + _canvas.Paddle.Height;
         }
 
         private void CheckWallCollision(Point newPosition)
         {
-            var outBoundsVertical = newPosition.X <= 0 || newPosition.X >= _width - Ball.Ball.Width;
+            var outBoundsVertical = newPosition.X <= 0 || newPosition.X >= _canvas.Width - _canvas.Ball.Shape.Width;
             var outBoundsTop = newPosition.Y <= 0;
-            var outBoundsBottom = newPosition.Y >= _height - Ball.Ball.Height;
+            var outBoundsBottom = newPosition.Y >= _canvas.Height - _canvas.Ball.Shape.Height;
 
             if (outBoundsTop)
-                Ball.Bounce(Direction.Horizontal);
+            {
+                _canvas.Ball.Bounce(Direction.Horizontal);
+            }
             else if (outBoundsVertical)
-                Ball.Bounce(Direction.Vertical);
+            {
+                _canvas.Ball.Bounce(Direction.Vertical);
+            }
             else if (outBoundsBottom)
-                Ball.Bounce(Direction.Horizontal);
-            // TODO: destroy ball if it is out of bottom bound
-            //DestroyBall();
-            //AddBall();
+            {
+                _gameCanvasBuilder.DestroyBall();
+                _gameCanvasBuilder.AddBall();
+            }
             else
-                SetPosition(Ball, newPosition);
-        }
-
-        private void AddBall()
-        {
-            if (_ballCount > 0)
             {
-                Ball = new BouncyBall();
-                GameCanvas.Children.Add(Ball);
-                SetPosition(Ball, GameCanvas.Width / 2 - Ball.Ball.Width / 2, GameCanvas.Height - 100);
+                SetPosition(_canvas.Ball, newPosition);
             }
         }
 
-        private void DestroyBall()
-        {
-            GameCanvas.Children.Remove(Ball.Ball);
-            Ball.Ball = null;
-            Ball = null;
-            _ballCount--;
-        }
-
-        private void DestroyBrick(Brick brick)
-        {
-            Score += brick.ScoreForDestruction;
-            GameCanvas.Children.Remove(brick.Shape);
-            brick.Shape = null;
-            _bricks.Remove(brick);
-            ScoreChanged?.Invoke(this, new ScoreChangedEventArgs(Score));
-        }
-
-        public void AddBricksRow(Brush colorBrush, int height, int score)
-        {
-            // TODO: algorithm to generate bricks depending on gameCanvas size
-            var numberOfBricks = 10;
-            var distanceBetweenBricks = 10;
-            var currentX = 5;
-            for (var i = 0; i < numberOfBricks; i++)
-            {
-                var brick = new Brick(colorBrush, score);
-                SetPosition(brick, currentX, height);
-                GameCanvas.Children.Add(brick.Shape);
-                _bricks.Add(brick);
-                currentX += distanceBetweenBricks + Brick.Width;
-            }
-        }
-
-        public void MovePaddle(Direction direction)
-        {
-            var oldPosition = _paddle.Position;
-            if (direction == Direction.Left)
-            {
-                var newPositon = new Point(oldPosition.X - 3,
-                    oldPosition.Y);
-                if (CollidesWithPaddleHorizontal(Ball.Position, newPositon)
-                    && CollidesWithPaddleVertical(Ball.Position, newPositon)) return;
-                if (newPositon.X < GameCanvas.Width - _paddle.Width && newPositon.X > 0)
-                    SetPosition(_paddle.Shape, newPositon);
-            }
-            else if (direction == Direction.Right)
-            {
-                var newPositon = new Point(oldPosition.X + 3,
-                    oldPosition.Y);
-                if (CollidesWithPaddleHorizontal(Ball.Position, newPositon)
-                    && CollidesWithPaddleVertical(Ball.Position, newPositon)) return;
-                if (newPositon.X < GameCanvas.Width - _paddle.Width && newPositon.X > 0)
-                    SetPosition(_paddle.Shape, newPositon);
-            }
-        }
+        // TODO: extract class MovementLogic
+                public void MovePaddle(Direction direction)
+                {
+                    var oldPosition = _canvas.Paddle.Position;
+                    if (direction == Direction.Left)
+                    {
+                        var newPositon = new Point(oldPosition.X - 3,
+                            oldPosition.Y);
+                        if (CollidesWithPaddleHorizontal(_canvas.Ball.Position, newPositon)
+                            && CollidesWithPaddleVertical(_canvas.Ball.Position, newPositon)) return;
+                        if (newPositon.X < _canvas.Width - _canvas.Paddle.Width && newPositon.X > 0)
+                            SetPosition(_canvas.Paddle.Shape, newPositon);
+                    }
+                    else if (direction == Direction.Right)
+                    {
+                        var newPositon = new Point(oldPosition.X + 3,
+                            oldPosition.Y);
+                        if (CollidesWithPaddleHorizontal(_canvas.Ball.Position, newPositon)
+                            && CollidesWithPaddleVertical(_canvas.Ball.Position, newPositon)) return;
+                        if (newPositon.X < _canvas.Width - _canvas.Paddle.Width && newPositon.X > 0)
+                            SetPosition(_canvas.Paddle.Shape, newPositon);
+                    }
+                }
 
         private void OnGameOver(GameOverEventArgs e)
         {
@@ -252,6 +193,11 @@ namespace AtariBreakoutWPF
         private void OnBallDestroyed(BallDestroyedEventArgs e)
         {
             BallDestroyed?.Invoke(this, e);
+        }
+
+        private void OnScoreChanged(ScoreChangedEventArgs e)
+        {
+            ScoreChanged?.Invoke(this, e);
         }
     }
 }
