@@ -56,10 +56,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BallDestroyedEventArgs.cs" />
+    <Compile Include="CollisionLogic.cs" />
     <Compile Include="GameCanvas.cs" />
     <Compile Include="GameCanvasBuilder.cs" />
     <Compile Include="GameOverEventArgs.cs" />
+    <Compile Include="MovementLogic.cs" />
     <Compile Include="ScoreChangedEventArgs.cs" />
+    <Compile Include="Utility.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

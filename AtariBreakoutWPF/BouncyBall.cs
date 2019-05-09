@@ -10,11 +10,17 @@ namespace AtariBreakoutWPF
     public sealed class BouncyBall
     {
         public Vector MoveVector { get; private set; }
-        public Ellipse Shape { get; set; }
+
+        public Ellipse Shape
+        {
+            get => _shape;
+            set => _shape = value;
+        }
+
+        private Ellipse _shape;
         public int Speed { get; set; }
 
-        public Point Position => new Point((double) Shape.GetValue(Canvas.LeftProperty),
-            (double) Shape.GetValue(Canvas.TopProperty));
+        public Point Position => Utility.Position(Shape);
 
         public BouncyBall(Vector moveVector, int speed)
         {
@@ -44,7 +50,7 @@ namespace AtariBreakoutWPF
             Speed = 5;
         }
 
-        
+
         ~BouncyBall()
         {
             Shape = null;
@@ -55,11 +61,6 @@ namespace AtariBreakoutWPF
             if (direction == Direction.Horizontal) MoveVector = new Vector(MoveVector.X, -MoveVector.Y);
 
             if (direction == Direction.Vertical) MoveVector = new Vector(-MoveVector.X, MoveVector.Y);
-        }
-
-        public static implicit operator Ellipse(BouncyBall ball)
-        {
-            return ball.Shape;
         }
 
         public void BounceOffPaddle(double distanceFromCenterOfPaddle, Direction direction, double paddleWidth)
@@ -80,15 +81,6 @@ namespace AtariBreakoutWPF
                 var bounceVectorY = -Math.Sin(bounceAngleInRad);
 
                 bounceVector = new Vector(bounceVectorX, bounceVectorY);
-#if DEBUG
-                Debug.Assert(coefficient >= 0 && coefficient <= 1, "wrongly calculated bounce coefficient");
-                Console.WriteLine("Bouncing off paddle horizontally");
-                Console.WriteLine($"dfcop: {distanceFromCenterOfPaddle}");
-                Console.WriteLine($"cofficient: {coefficient}");
-                Console.WriteLine($"fall angle: {fallAngle}");
-                Console.WriteLine($"bounce angle: {bounceAngle}");
-                Console.WriteLine();
-#endif
             }
             else
             {

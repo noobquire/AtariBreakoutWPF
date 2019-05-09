@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -27,12 +26,6 @@ namespace AtariBreakoutWPF
 
         public Rectangle Shape;
 
-        public Point Position => new Point((double) Shape.GetValue(Canvas.LeftProperty),
-            (double) Shape.GetValue(Canvas.TopProperty));
-
-        public static implicit operator Rectangle(Brick brick)
-        {
-            return brick.Shape;
-        }
+        public Point Position => Utility.Position(Shape);
     }
 }
