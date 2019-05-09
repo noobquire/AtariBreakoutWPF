@@ -19,22 +19,24 @@ namespace AtariBreakoutWPF
 
         public MainWindow()
         {
+            #if DEBUG // for exceptions in english
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            #endif
             InitializeComponent();
 
             _logic = new GameLogic(GameCanvas);
 
             _ballTimer = new DispatcherTimer(new TimeSpan(70000), DispatcherPriority.Background,
-                (sender, args) => _logic.MoveBall(), Dispatcher);
+                (sender, args) => _logic.Tick(), Dispatcher);
             _paddleTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(0.7), DispatcherPriority.Background,
                 (sender, args) => _logic.MovePaddle(_direction), Dispatcher);
 
             _ballTimer.Start();
             KeyDown += Game_OnKeyDown;
             KeyUp += Game_OnKeyUp;
-            _logic.ScoreChanged += Game_OnScoreChanged;
-            _logic.BallDestroyed += Game_OnBallDestroyed;
-            _logic.GameOver += Game_OnGameOver;
+            _logic.GameCanvas.ScoreChanged += Game_OnScoreChanged;
+            _logic.GameCanvas.BallDestroyed += Game_OnBallDestroyed;
+            _logic.GameCanvas.GameOver += Game_OnGameOver;
         }
 
         private void Game_OnGameOver(object sender, GameOverEventArgs e)

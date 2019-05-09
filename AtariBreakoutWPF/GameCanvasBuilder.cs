@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using static AtariBreakoutWPF.Utility;
 
 namespace AtariBreakoutWPF
 {
@@ -11,12 +12,6 @@ namespace AtariBreakoutWPF
         public GameCanvasBuilder(Canvas canvas)
         {
             _gameCanvas = new GameCanvas(canvas);
-        }
-
-        private void SetPosition(UIElement element, double x, double y)
-        {
-            Canvas.SetTop(element, y);
-            Canvas.SetLeft(element, x);
         }
 
         public void AddPaddle()
@@ -45,7 +40,7 @@ namespace AtariBreakoutWPF
             for (var i = 0; i < numberOfBricks; i++)
             {
                 var brick = new Brick(colorBrush, score);
-                SetPosition(brick, currentX, height);
+                SetPosition(brick.Shape, currentX, height);
                 _gameCanvas.Canvas.Children.Add(brick.Shape); // todo move to setter
                 _gameCanvas.Bricks.Add(brick); 
                 currentX += distanceBetweenBricks + Brick.Width;
@@ -55,24 +50,9 @@ namespace AtariBreakoutWPF
         public void AddBall()
         {
             _gameCanvas.Ball = new BouncyBall(new Vector(0, -1), 3);
-            _gameCanvas.Canvas.Children.Add(_gameCanvas.Ball); // todo move to setter
-            SetPosition(_gameCanvas.Ball, _gameCanvas.Paddle.Position.X +
+            _gameCanvas.Canvas.Children.Add(_gameCanvas.Ball.Shape); // todo move to setter
+            SetPosition(_gameCanvas.Ball.Shape, _gameCanvas.Paddle.Position.X +
                                           _gameCanvas.Paddle.Width / 2 - _gameCanvas.Ball.Shape.Width, _gameCanvas.Height - 100);
-        }
-
-        public void DestroyBall()
-        {
-            _gameCanvas.Canvas.Children.Remove(_gameCanvas.Ball.Shape);
-            _gameCanvas.Ball.Shape = null;
-            _gameCanvas.Ball = null;
-        }
-
-        public void DestroyBrick(Brick brick)
-        {
-            // TODO: Increase ball speed when ball first hits yellow and red bricks etc
-            _gameCanvas.Canvas.Children.Remove(brick.Shape);
-            brick.Shape = null;
-            _gameCanvas.Bricks.Remove(brick);
         }
 
         public GameCanvas Build()

@@ -56,10 +56,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BallDestroyedEventArgs.cs" />
+    <Compile Include="CollisionDetection\BallCollision.cs" />
+    <Compile Include="CollisionDetection\BrickCollision.cs" />
+    <Compile Include="CollisionDetection\PaddleCollision.cs" />
+    <Compile Include="CollisionDetection\WallCollision.cs" />
     <Compile Include="GameCanvas.cs" />
     <Compile Include="GameCanvasBuilder.cs" />
     <Compile Include="GameOverEventArgs.cs" />
+    <Compile Include="MovementLogic.cs" />
     <Compile Include="ScoreChangedEventArgs.cs" />
+    <Compile Include="Utility.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
