@@ -23,6 +23,9 @@ namespace AtariBreakoutWPF
         public double Width => Canvas.Width;
 
         public int Score { get; private set; }
+        /// <summary>
+        /// Amount of bouncy balls that player can destroy before losing
+        /// </summary>
         public int BallCount { get; private set; }
 
         public void AddBall()
@@ -41,6 +44,7 @@ namespace AtariBreakoutWPF
 
         public void DestroyBall()
         {
+            Ball.HitCount = 0;
             Canvas.Children.Remove(Ball.Shape);
             Ball.Shape = null;
             BallCount--;
@@ -49,12 +53,28 @@ namespace AtariBreakoutWPF
 
         public void DestroyBrick(Brick brick)
         {
-            // TODO: Increase ball speed when ball first hits yellow and red bricks etc
+            Ball.HitCount++;
+            CheckBallAcceleration(brick);
+
             Canvas.Children.Remove(brick.Shape);
             Bricks.Remove(brick);
             brick.Shape = null;
             Score += brick.ScoreForDestruction;
             OnScoreChanged(new ScoreChangedEventArgs(Score));
+        }
+
+        private void CheckBallAcceleration(Brick brick)
+        {
+            if (!Ball.RedBrickHit && brick.Color == Brick.BrickColor.Red)
+            {
+                Ball.RedBrickHit = true;
+            }
+
+            if (!Ball.OrangeBrickHit && brick.Color == Brick.BrickColor.Orange)
+            {
+                Ball.OrangeBrickHit = true;
+            }
+            if (Ball.HitCount == 4 || Ball.HitCount == 12) Ball.Speed += BouncyBall.Acceleration;
         }
 
         public event EventHandler<ScoreChangedEventArgs> ScoreChanged;

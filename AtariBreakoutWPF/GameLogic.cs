@@ -17,11 +17,6 @@ namespace AtariBreakoutWPF
             _movementLogic = new MovementLogic(GameCanvas);
         }
 
-        public void SetBallSpeed(int newSpeed)
-        {
-            GameCanvas.Ball.Speed = newSpeed;
-        }
-
         public void Tick()
         {
             _movementLogic.MoveBall();

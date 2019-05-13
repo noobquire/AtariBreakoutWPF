@@ -24,24 +24,24 @@ namespace AtariBreakoutWPF
 
         public void AddBricks()
         {
-            AddBricksRow(Brushes.Red, 30, 7);
-            AddBricksRow(Brushes.Red, 55, 7);
-            AddBricksRow(Brushes.DarkOrange, 80, 5);
-            AddBricksRow(Brushes.DarkOrange, 105, 5);
-            AddBricksRow(Brushes.Green, 130, 3);
-            AddBricksRow(Brushes.Green, 155, 3);
-            AddBricksRow(Brushes.Yellow, 180, 1);
-            AddBricksRow(Brushes.Yellow, 205, 1);
+            AddBricksRow(Brick.BrickColor.Red, 30, 7);
+            AddBricksRow(Brick.BrickColor.Red, 55, 7);
+            AddBricksRow(Brick.BrickColor.Orange, 80, 5);
+            AddBricksRow(Brick.BrickColor.Orange, 105, 5);
+            AddBricksRow(Brick.BrickColor.Green, 130, 3);
+            AddBricksRow(Brick.BrickColor.Green, 155, 3);
+            AddBricksRow(Brick.BrickColor.Yellow, 180, 1);
+            AddBricksRow(Brick.BrickColor.Yellow, 205, 1);
         }
 
-        private void AddBricksRow(Brush colorBrush, int height, int score)
+        private void AddBricksRow(Brick.BrickColor rowColor, int height, int score)
         {
             var numberOfBricks = 14;
             var distanceBetweenBricks = (_gameCanvas.Width - numberOfBricks * Brick.Width)/numberOfBricks;
             double currentX = 1;
             for (var i = 0; i < numberOfBricks; i++)
             {
-                var brick = new Brick(colorBrush, score);
+                var brick = new Brick(rowColor, score);
                 SetPosition(brick.Shape, currentX, height);
                 _gameCanvas.Canvas.Children.Add(brick.Shape);
                 _gameCanvas.Bricks.Add(brick);

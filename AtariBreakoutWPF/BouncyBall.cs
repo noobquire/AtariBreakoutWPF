@@ -21,6 +21,8 @@ namespace AtariBreakoutWPF
             Speed = speed;
         }
 
+        public const int Acceleration = 1;
+
         public BouncyBall()
         {
             MoveVector = new Vector(1, 1);
@@ -32,15 +34,41 @@ namespace AtariBreakoutWPF
                 Stroke = Brushes.DarkCyan,
                 Fill = Brushes.DarkRed
             };
-            Speed = 20;
+            Speed = 2;
         }
-
+        /// <summary>
+        /// Defines directions in which the ball is moving
+        /// </summary>
         public Vector MoveVector { get; private set; }
 
+        /// <summary>
+        /// Actual shape of the ball which is added on the canvas
+        /// </summary>
         public Ellipse Shape { get; set; }
 
+        /// <summary>
+        /// Speed at which the ball moves
+        /// </summary>
         public int Speed { get; set; }
 
+        /// <summary>
+        /// Amount of bricks the ball destroyed
+        /// </summary>
+        public int HitCount { get; set; }
+
+        private int _hitCount;
+
+        /// <summary>
+        /// Defines if at least one orange brick was destroyed by the ball
+        /// </summary>
+        public bool OrangeBrickHit { get; set; }
+        /// <summary>
+        /// Defines if at least one red brick was destroyed by the ball
+        /// </summary>
+        public bool RedBrickHit { get; set; }
+        /// <summary>
+        /// Current position of the ball on game canvas
+        /// </summary>
         public Point Position => Utility.Position(Shape);
 
 
@@ -48,7 +76,10 @@ namespace AtariBreakoutWPF
         {
             Shape = null;
         }
-
+        /// <summary>
+        /// Swaps ball movement along one of the axes, fall angle equals bounce angle
+        /// </summary>
+        /// <param name="direction">Direction of surface from which the ball is bouncing</param>
         public void Bounce(Direction direction)
         {
             if (direction == Direction.Horizontal) MoveVector = new Vector(MoveVector.X, -MoveVector.Y);
@@ -56,6 +87,12 @@ namespace AtariBreakoutWPF
             if (direction == Direction.Vertical) MoveVector = new Vector(-MoveVector.X, MoveVector.Y);
         }
 
+        /// <summary>
+        /// Swaps ball movement along one of the axes, and changes angle depending on distance from center of paddle
+        /// </summary>
+        /// <param name="distanceFromCenterOfPaddle">Absolute difference between X coordinates of ball's and paddle's centers. No bigger than half width of the paddle</param>
+        /// <param name="direction">Direction of surface from which the ball is bouncing</param>
+        /// <param name="paddleWidth">Width of the paddle</param>
         public void BounceOffPaddle(double distanceFromCenterOfPaddle, Direction direction, double paddleWidth)
         {
             var coefficient = 1 - distanceFromCenterOfPaddle / (paddleWidth / 2); // must be from 0 to 1

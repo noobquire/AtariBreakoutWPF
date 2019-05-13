@@ -38,7 +38,6 @@ namespace AtariBreakoutWPF
                 if (BrickCollision(newPosition, oldPosition, out bounceDirection))
                 {
                     _gameCanvas.Ball.Bounce(bounceDirection);
-                    return;
                 }
 
                 if (WallCollision(newPosition, out bounceDirection))
@@ -130,7 +129,6 @@ namespace AtariBreakoutWPF
                 bounceDirection = Direction.Horizontal;
                 return true;
             }
-
             if (_ballCollision.OutBounds.Vertical(newPosition))
             {
                 bounceDirection = Direction.Vertical;
