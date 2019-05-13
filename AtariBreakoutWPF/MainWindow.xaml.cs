@@ -19,9 +19,9 @@ namespace AtariBreakoutWPF
 
         public MainWindow()
         {
-            #if DEBUG // for exceptions in english
+#if DEBUG // for exceptions in english
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            #endif
+#endif
             InitializeComponent();
 
             _logic = new GameLogic(GameCanvas);
@@ -41,10 +41,12 @@ namespace AtariBreakoutWPF
 
         private void Game_OnGameOver(object sender, GameOverEventArgs e)
         {
-            MessageBox.Show($"Game over\r\nYour score: {e.FinalScore}", "Game over", MessageBoxButton.OK,
-                MessageBoxImage.Exclamation);
             _paddleTimer.Stop();
             _ballTimer.Stop();
+            KeyDown -= Game_OnKeyDown;
+            KeyUp -= Game_OnKeyUp;
+            MessageBox.Show($"Game over\r\nYour score: {e.FinalScore}", "Game over", MessageBoxButton.OK,
+                MessageBoxImage.Exclamation);
         }
 
         private void Game_OnBallDestroyed(object sender, BallDestroyedEventArgs e)

@@ -22,9 +22,10 @@ namespace AtariBreakoutWPF
             var newPosition = new Point(oldPosition.X + _gameCanvas.Ball.MoveVector.X * _gameCanvas.Ball.Speed,
                 oldPosition.Y + _gameCanvas.Ball.MoveVector.Y * _gameCanvas.Ball.Speed);
 
-            CheckWallCollision(newPosition);
+            
             CheckPaddleCollision(newPosition, oldPosition);
             CheckBrickCollision(newPosition, oldPosition);
+            CheckWallCollision(newPosition); // ball collision has to be checked last because ball may get destroyed
         }
         public void MovePaddle(Direction direction)
         {

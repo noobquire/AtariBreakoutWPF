@@ -41,7 +41,7 @@ namespace AtariBreakoutWPF
             {
                 var brick = new Brick(colorBrush, score);
                 SetPosition(brick.Shape, currentX, height);
-                _gameCanvas.Canvas.Children.Add(brick.Shape); // todo move to setter
+                _gameCanvas.Canvas.Children.Add(brick.Shape);
                 _gameCanvas.Bricks.Add(brick); 
                 currentX += distanceBetweenBricks + Brick.Width;
             }
@@ -50,7 +50,7 @@ namespace AtariBreakoutWPF
         public void AddBall()
         {
             _gameCanvas.Ball = new BouncyBall(new Vector(0, -1), 3);
-            _gameCanvas.Canvas.Children.Add(_gameCanvas.Ball.Shape); // todo move to setter
+            _gameCanvas.Canvas.Children.Add(_gameCanvas.Ball.Shape);
             SetPosition(_gameCanvas.Ball.Shape, _gameCanvas.Paddle.Position.X +
                                           _gameCanvas.Paddle.Width / 2 - _gameCanvas.Ball.Shape.Width, _gameCanvas.Height - 100);
         }

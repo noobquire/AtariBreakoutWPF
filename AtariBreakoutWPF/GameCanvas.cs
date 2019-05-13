@@ -20,13 +20,13 @@ namespace AtariBreakoutWPF
         public BouncyBall Ball;
         public void AddBall()
         {
-            if (BallCount == 0)
+            if (BallCount <= 0)
             {
                 OnGameOver(new GameOverEventArgs(Score));
                 return;
             }
             Ball = new BouncyBall(new Vector(0, -1), 3);
-            Canvas.Children.Add(Ball.Shape); // todo move to setter
+            Canvas.Children.Add(Ball.Shape);
             Utility.SetPosition(Ball.Shape, Paddle.Position.X +
                                                 Paddle.Width / 2 - Ball.Shape.Width, Height - 100);
         }

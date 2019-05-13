@@ -5,7 +5,7 @@ namespace AtariBreakoutWPF.CollisionDetection
         public WallCollision OutBounds;
         public BrickCollision WithBrick;
         public PaddleCollision WithPaddle;
-
+         
         private GameCanvas _gameCanvas;
 
         public BallCollision(GameCanvas gameCanvas)
