@@ -32,7 +32,7 @@ namespace AtariBreakoutWPF
                 Stroke = Brushes.DarkCyan,
                 Fill = Brushes.DarkRed
             };
-            Speed = 5;
+            Speed = 20;
         }
 
         public Vector MoveVector { get; private set; }

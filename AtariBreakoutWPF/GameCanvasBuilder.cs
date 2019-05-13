@@ -25,19 +25,20 @@ namespace AtariBreakoutWPF
         public void AddBricks()
         {
             AddBricksRow(Brushes.Red, 30, 7);
-            AddBricksRow(Brushes.Red, 60, 7);
-            AddBricksRow(Brushes.Yellow, 90, 5);
-            AddBricksRow(Brushes.Yellow, 120, 5);
-            AddBricksRow(Brushes.Green, 150, 3);
-            AddBricksRow(Brushes.Green, 180, 3);
+            AddBricksRow(Brushes.Red, 55, 7);
+            AddBricksRow(Brushes.DarkOrange, 80, 5);
+            AddBricksRow(Brushes.DarkOrange, 105, 5);
+            AddBricksRow(Brushes.Green, 130, 3);
+            AddBricksRow(Brushes.Green, 155, 3);
+            AddBricksRow(Brushes.Yellow, 180, 1);
+            AddBricksRow(Brushes.Yellow, 205, 1);
         }
 
         private void AddBricksRow(Brush colorBrush, int height, int score)
         {
-            // TODO: algorithm to generate bricks depending on gameCanvas size
-            var numberOfBricks = 10;
-            var distanceBetweenBricks = 10;
-            var currentX = 5;
+            var numberOfBricks = 14;
+            var distanceBetweenBricks = (_gameCanvas.Width - numberOfBricks * Brick.Width)/numberOfBricks;
+            double currentX = 1;
             for (var i = 0; i < numberOfBricks; i++)
             {
                 var brick = new Brick(colorBrush, score);

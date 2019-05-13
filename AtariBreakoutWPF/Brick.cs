@@ -6,7 +6,7 @@ namespace AtariBreakoutWPF
 {
     public sealed class Brick
     {
-        public static readonly int Width = 70;
+        public static readonly int Width = 55;
         public static readonly int Height = 20;
         public readonly int ScoreForDestruction;
 
@@ -19,8 +19,8 @@ namespace AtariBreakoutWPF
                 Width = Width,
                 Height = Height,
                 Fill = colorBrush,
-                StrokeThickness = 2,
-                Stroke = Brushes.Black
+                StrokeThickness = 1,
+                Stroke = Brushes.Black,
             };
             ScoreForDestruction = score;
         }
