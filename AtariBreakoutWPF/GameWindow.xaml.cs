@@ -10,14 +10,14 @@ namespace AtariBreakoutWPF
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class GameWindow
     {
         private readonly DispatcherTimer _ballTimer;
         private readonly GameLogic _logic;
         private readonly DispatcherTimer _paddleTimer;
         private Direction _direction = Direction.Default;
 
-        public MainWindow()
+        public GameWindow()
         {
 #if DEBUG // for exceptions in english
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
