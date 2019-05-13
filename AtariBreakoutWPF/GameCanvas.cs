@@ -7,17 +7,24 @@ namespace AtariBreakoutWPF
 {
     public class GameCanvas
     {
-        public readonly Canvas Canvas;
         public readonly IList<Brick> Bricks = new List<Brick>();
+        public readonly Canvas Canvas;
+        public BouncyBall Ball;
+
+        public Paddle Paddle;
+
+        public GameCanvas(Canvas canvas)
+        {
+            Canvas = canvas;
+            BallCount = 5;
+        }
 
         public double Height => Canvas.Height;
         public double Width => Canvas.Width;
-        
+
         public int Score { get; private set; }
         public int BallCount { get; private set; }
 
-        public Paddle Paddle;
-        public BouncyBall Ball;
         public void AddBall()
         {
             if (BallCount <= 0)
@@ -25,10 +32,11 @@ namespace AtariBreakoutWPF
                 OnGameOver(new GameOverEventArgs(Score));
                 return;
             }
+
             Ball = new BouncyBall(new Vector(0, -1), 3);
             Canvas.Children.Add(Ball.Shape);
             Utility.SetPosition(Ball.Shape, Paddle.Position.X +
-                                                Paddle.Width / 2 - Ball.Shape.Width, Height - 100);
+                                            Paddle.Width / 2 - Ball.Shape.Width, Height - 100);
         }
 
         public void DestroyBall()
@@ -49,23 +57,22 @@ namespace AtariBreakoutWPF
             OnScoreChanged(new ScoreChangedEventArgs(Score));
         }
 
-        public GameCanvas(Canvas canvas)
-        {
-            Canvas = canvas;
-            BallCount = 5;
-        }
-        
         public event EventHandler<ScoreChangedEventArgs> ScoreChanged;
+
         private void OnScoreChanged(ScoreChangedEventArgs e)
         {
             ScoreChanged?.Invoke(this, e);
         }
+
         public event EventHandler<GameOverEventArgs> GameOver;
+
         private void OnGameOver(GameOverEventArgs e)
         {
             GameOver?.Invoke(this, e);
         }
+
         public event EventHandler<BallDestroyedEventArgs> BallDestroyed;
+
         private void OnBallDestroyed(BallDestroyedEventArgs e)
         {
             BallDestroyed?.Invoke(this, e);

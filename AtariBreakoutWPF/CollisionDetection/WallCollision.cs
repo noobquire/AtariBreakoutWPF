@@ -4,7 +4,7 @@ namespace AtariBreakoutWPF.CollisionDetection
 {
     public class WallCollision
     {
-        private GameCanvas _gameCanvas;
+        private readonly GameCanvas _gameCanvas;
 
         public WallCollision(GameCanvas gameCanvas)
         {
@@ -15,6 +15,7 @@ namespace AtariBreakoutWPF.CollisionDetection
         {
             return true;
         }
+
         public bool Top(Point newPosition)
         {
             return newPosition.Y <= 0;

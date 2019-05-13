@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -9,19 +7,6 @@ namespace AtariBreakoutWPF
 {
     public sealed class BouncyBall
     {
-        public Vector MoveVector { get; private set; }
-
-        public Ellipse Shape
-        {
-            get => _shape;
-            set => _shape = value;
-        }
-
-        private Ellipse _shape;
-        public int Speed { get; set; }
-
-        public Point Position => Utility.Position(Shape);
-
         public BouncyBall(Vector moveVector, int speed)
         {
             MoveVector = moveVector;
@@ -49,6 +34,14 @@ namespace AtariBreakoutWPF
             };
             Speed = 5;
         }
+
+        public Vector MoveVector { get; private set; }
+
+        public Ellipse Shape { get; set; }
+
+        public int Speed { get; set; }
+
+        public Point Position => Utility.Position(Shape);
 
 
         ~BouncyBall()

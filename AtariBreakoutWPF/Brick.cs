@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -10,6 +9,8 @@ namespace AtariBreakoutWPF
         public static readonly int Width = 70;
         public static readonly int Height = 20;
         public readonly int ScoreForDestruction;
+
+        public Rectangle Shape;
 
         public Brick(Brush colorBrush, int score)
         {
@@ -23,8 +24,6 @@ namespace AtariBreakoutWPF
             };
             ScoreForDestruction = score;
         }
-
-        public Rectangle Shape;
 
         public Point Position => Utility.Position(Shape);
     }

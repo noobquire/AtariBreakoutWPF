@@ -18,8 +18,8 @@ namespace AtariBreakoutWPF
 
         public static Point Position(UIElement element)
         {
-            return new Point((double)element.GetValue(Canvas.LeftProperty),
-                (double)element.GetValue(Canvas.TopProperty));
+            return new Point((double) element.GetValue(Canvas.LeftProperty),
+                (double) element.GetValue(Canvas.TopProperty));
         }
     }
 }

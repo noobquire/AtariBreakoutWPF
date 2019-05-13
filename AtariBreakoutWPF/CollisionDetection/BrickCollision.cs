@@ -4,13 +4,13 @@ namespace AtariBreakoutWPF.CollisionDetection
 {
     public class BrickCollision
     {
-        private GameCanvas _gameCanvas;
+        private readonly GameCanvas _gameCanvas;
 
         public BrickCollision(GameCanvas gameCanvas)
         {
             _gameCanvas = gameCanvas;
         }
-        
+
         public bool Vertical(Point ballPosition, Brick brick)
         {
             return ballPosition.X >= brick.Position.X - _gameCanvas.Ball.Shape.Width &&

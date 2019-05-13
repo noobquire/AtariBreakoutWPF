@@ -7,7 +7,7 @@ namespace AtariBreakoutWPF
 {
     public class GameCanvasBuilder
     {
-        private GameCanvas _gameCanvas;
+        private readonly GameCanvas _gameCanvas;
 
         public GameCanvasBuilder(Canvas canvas)
         {
@@ -17,7 +17,8 @@ namespace AtariBreakoutWPF
         public void AddPaddle()
         {
             _gameCanvas.Paddle = new Paddle(160);
-            SetPosition(_gameCanvas.Paddle.Shape, _gameCanvas.Width / 2 - _gameCanvas.Paddle.Width / 2, _gameCanvas.Height - 60);
+            SetPosition(_gameCanvas.Paddle.Shape, _gameCanvas.Width / 2 - _gameCanvas.Paddle.Width / 2,
+                _gameCanvas.Height - 60);
             _gameCanvas.Canvas.Children.Add(_gameCanvas.Paddle.Shape);
         }
 
@@ -42,7 +43,7 @@ namespace AtariBreakoutWPF
                 var brick = new Brick(colorBrush, score);
                 SetPosition(brick.Shape, currentX, height);
                 _gameCanvas.Canvas.Children.Add(brick.Shape);
-                _gameCanvas.Bricks.Add(brick); 
+                _gameCanvas.Bricks.Add(brick);
                 currentX += distanceBetweenBricks + Brick.Width;
             }
         }
@@ -52,7 +53,8 @@ namespace AtariBreakoutWPF
             _gameCanvas.Ball = new BouncyBall(new Vector(0, -1), 3);
             _gameCanvas.Canvas.Children.Add(_gameCanvas.Ball.Shape);
             SetPosition(_gameCanvas.Ball.Shape, _gameCanvas.Paddle.Position.X +
-                                          _gameCanvas.Paddle.Width / 2 - _gameCanvas.Ball.Shape.Width, _gameCanvas.Height - 100);
+                                                _gameCanvas.Paddle.Width / 2 - _gameCanvas.Ball.Shape.Width,
+                _gameCanvas.Height - 100);
         }
 
         public GameCanvas Build()

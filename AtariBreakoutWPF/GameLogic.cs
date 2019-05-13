@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
+﻿using System.Windows.Controls;
 
 namespace AtariBreakoutWPF
 {
     public sealed class GameLogic
     {
         public readonly GameCanvas GameCanvas;
-        private MovementLogic _movementLogic;
+        private readonly MovementLogic _movementLogic;
 
         public GameLogic(Canvas gameCanvas)
         {
-            
             var gameCanvasBuilder = new GameCanvasBuilder(gameCanvas);
             gameCanvasBuilder.AddPaddle();
             gameCanvasBuilder.AddBricks();
