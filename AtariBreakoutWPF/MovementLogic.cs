@@ -83,12 +83,10 @@ namespace AtariBreakoutWPF
                     if (_ballCollision.WithBrick.OnlyHorizontal(oldPosition, brick))
                     {
                         bounceDirection = Direction.Vertical;
-                        //_gameCanvas.Ball.Bounce(Direction.Vertical);
                     }
                     else if (_ballCollision.WithBrick.OnlyVertical(oldPosition, brick))
                     {
                         bounceDirection = Direction.Horizontal;
-                        //_gameCanvas.Ball.Bounce(Direction.Horizontal);
                     }
                     _gameCanvas.DestroyBrick(brick);
                     return true;
@@ -109,7 +107,6 @@ namespace AtariBreakoutWPF
                     distanceFromCenterOfPaddle = _gameCanvas.Paddle.Width / 2;
                     bounceDirection = Direction.Vertical;
                     return true;
-                    //_gameCanvas.Ball.BounceOffPaddle(distanceFromCenterOfPaddle, Direction.Vertical, _gameCanvas.Paddle.Width);
                 }
 
                 if (_ballCollision.WithPaddle.Horizontal(oldPosition, paddlePosition))
@@ -119,7 +116,6 @@ namespace AtariBreakoutWPF
                     if (distanceFromCenterOfPaddle > _gameCanvas.Paddle.Width / 2) distanceFromCenterOfPaddle = _gameCanvas.Paddle.Width / 2;
                     bounceDirection = Direction.Horizontal;
                     return true;
-                    //_gameCanvas.Ball.BounceOffPaddle(distanceFromCenterOfPaddle, Direction.Horizontal, _gameCanvas.Paddle.Width);
                 }
 
             }
@@ -132,7 +128,6 @@ namespace AtariBreakoutWPF
             if (_ballCollision.OutBounds.Top(newPosition))
             {
                 bounceDirection = Direction.Horizontal;
-                //_gameCanvas.Ball.Bounce(Direction.Horizontal);
                 return true;
             }
 
@@ -140,16 +135,13 @@ namespace AtariBreakoutWPF
             {
                 bounceDirection = Direction.Vertical;
                 return true;
-                //_gameCanvas.Ball.Bounce(Direction.Vertical);
             }
             if (_ballCollision.OutBounds.Bottom(newPosition))
             {
                 bounceDirection = Direction.OutOfBounds;
                 return true;
-                //
             }
             return false;
-            //
         }
 
     }
