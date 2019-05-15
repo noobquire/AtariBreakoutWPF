@@ -56,6 +56,21 @@ namespace AtariBreakoutWPF
             
 
         }
+        private void CheckBallAccelerationConditions(Brick brick) // TODO: move this somewhere else, maybe to MovementLogic?
+        {
+            if (!_gameCanvas.Ball.RedBrickHit && brick.Color == Brick.BrickColor.Red)
+            {
+                _gameCanvas.Ball.RedBrickHit = true;
+                _gameCanvas.Ball.Speed += BouncyBall.Acceleration;
+            }
+
+            if (!_gameCanvas.Ball.OrangeBrickHit && brick.Color == Brick.BrickColor.Orange)
+            {
+                _gameCanvas.Ball.OrangeBrickHit = true;
+                _gameCanvas.Ball.Speed += BouncyBall.Acceleration;
+            }
+            if (_gameCanvas.Ball.HitCount == 4 || _gameCanvas.Ball.HitCount == 12) _gameCanvas.Ball.Speed += BouncyBall.Acceleration;
+        }
         public void MovePaddle(Direction direction)
         {
             if (direction == Direction.Default) return;
@@ -87,6 +102,7 @@ namespace AtariBreakoutWPF
                     {
                         bounceDirection = Direction.Horizontal;
                     }
+                    CheckBallAccelerationConditions(brick);
                     _gameCanvas.DestroyBrick(brick);
                     return true;
                 }
@@ -116,7 +132,6 @@ namespace AtariBreakoutWPF
                     bounceDirection = Direction.Horizontal;
                     return true;
                 }
-
             }
             return false;
         }

@@ -7,35 +7,15 @@ namespace AtariBreakoutWPF
 {
     public sealed class BouncyBall
     {
-        public BouncyBall(Vector moveVector, int speed)
+        public BouncyBall(Vector moveVector, Ellipse shape, int speed)
         {
             MoveVector = moveVector;
-            Shape = new Ellipse
-            {
-                Height = 20,
-                Width = 20,
-                StrokeThickness = 2,
-                Stroke = Brushes.DarkCyan,
-                Fill = Brushes.DarkRed
-            };
+            Shape = shape;
             Speed = speed;
         }
 
         public const int Acceleration = 1;
 
-        public BouncyBall()
-        {
-            MoveVector = new Vector(1, 1);
-            Shape = new Ellipse
-            {
-                Height = 20,
-                Width = 20,
-                StrokeThickness = 2,
-                Stroke = Brushes.DarkCyan,
-                Fill = Brushes.DarkRed
-            };
-            Speed = 2;
-        }
         /// <summary>
         /// Defines directions in which the ball is moving
         /// </summary>
@@ -56,26 +36,21 @@ namespace AtariBreakoutWPF
         /// </summary>
         public int HitCount { get; set; }
 
-        private int _hitCount;
-
         /// <summary>
         /// Defines if at least one orange brick was destroyed by the ball
         /// </summary>
         public bool OrangeBrickHit { get; set; }
+
         /// <summary>
         /// Defines if at least one red brick was destroyed by the ball
         /// </summary>
         public bool RedBrickHit { get; set; }
+
         /// <summary>
         /// Current position of the ball on game canvas
         /// </summary>
         public Point Position => Utility.Position(Shape);
 
-
-        ~BouncyBall()
-        {
-            Shape = null;
-        }
         /// <summary>
         /// Swaps ball movement along one of the axes, fall angle equals bounce angle
         /// </summary>

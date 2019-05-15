@@ -24,14 +24,16 @@ namespace AtariBreakoutWPF
 
         public void AddBricks()
         {
-            AddBricksRow(Brick.BrickColor.Red, 30, 7);
-            AddBricksRow(Brick.BrickColor.Red, 55, 7);
-            AddBricksRow(Brick.BrickColor.Orange, 80, 5);
-            AddBricksRow(Brick.BrickColor.Orange, 105, 5);
-            AddBricksRow(Brick.BrickColor.Green, 130, 3);
-            AddBricksRow(Brick.BrickColor.Green, 155, 3);
-            AddBricksRow(Brick.BrickColor.Yellow, 180, 1);
-            AddBricksRow(Brick.BrickColor.Yellow, 205, 1);
+            int startHeight = 70;
+            int rowHeight = 25;
+            AddBricksRow(Brick.BrickColor.Red, startHeight, 7);
+            AddBricksRow(Brick.BrickColor.Red, startHeight + rowHeight, 7);
+            AddBricksRow(Brick.BrickColor.Orange, startHeight + 2 * rowHeight, 5);
+            AddBricksRow(Brick.BrickColor.Orange, startHeight + 3* rowHeight, 5);
+            AddBricksRow(Brick.BrickColor.Green, startHeight + 4 * rowHeight, 3);
+            AddBricksRow(Brick.BrickColor.Green, startHeight + 5 * rowHeight, 3);
+            AddBricksRow(Brick.BrickColor.Yellow, startHeight + 6 * rowHeight, 1);
+            AddBricksRow(Brick.BrickColor.Yellow, startHeight + 7 * rowHeight, 1);
         }
 
         private void AddBricksRow(Brick.BrickColor rowColor, int height, int score)
@@ -51,11 +53,7 @@ namespace AtariBreakoutWPF
 
         public void AddBall()
         {
-            _gameCanvas.Ball = new BouncyBall(new Vector(0, -1), 3);
-            _gameCanvas.Canvas.Children.Add(_gameCanvas.Ball.Shape);
-            SetPosition(_gameCanvas.Ball.Shape, _gameCanvas.Paddle.Position.X +
-                                                _gameCanvas.Paddle.Width / 2 - _gameCanvas.Ball.Shape.Width,
-                _gameCanvas.Height - 100);
+            _gameCanvas.AddBall();
         }
 
         public GameCanvas Build()

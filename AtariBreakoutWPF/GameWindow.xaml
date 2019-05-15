@@ -3,16 +3,56 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AtariBreakoutWPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="950">
-    <Canvas>
-        <Canvas Background="AliceBlue" Name="GameCanvas" Height="450" Width="800" Top="50" Left="75" />
+        Title="MainWindow" Height="750" Width="950">
+
+    <Canvas Background="#FFFBF7F7">
+        <Canvas Name="GameCanvas" Height="600" Width="800" Top="50" Left="75" >
+            <Canvas.Background>
+                <RadialGradientBrush>
+                    <GradientStop Color="#FFE5EEF9" Offset="1"/>
+                    <GradientStop Color="White"/>
+                </RadialGradientBrush>
+            </Canvas.Background>
+            <Ellipse x:Name="BallEllipse" Canvas.Top="66" Canvas.Left="-116" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Stroke="#FFB04141" >
+                <Ellipse.Fill>
+                    <RadialGradientBrush GradientOrigin="0.7,0.3">
+                        <RadialGradientBrush.RelativeTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleY="1" ScaleX="1"/>
+                                <SkewTransform AngleY="0" AngleX="0"/>
+                                <RotateTransform Angle="0"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </RadialGradientBrush.RelativeTransform>
+                        <GradientStop Color="#FFF06617" Offset="1"/>
+                        <GradientStop Color="#FFE4AD37" Offset="0.58"/>
+                        <GradientStop Color="#FFE2DBCA"/>
+                    </RadialGradientBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+        </Canvas>
         <Button Name="TestButton" Height="20" Width="50" Canvas.Top="10" Canvas.Left="10" Content="pause" />
         <TextBlock Name="Score" Canvas.Top="10" Canvas.Right="10" Text="Score: 0" FontWeight="Bold" FontSize="25" />
-        <Ellipse Name="BallCountEllipse" Canvas.Top="10" Canvas.Left="70" Width="20" Height="20" Fill="DarkRed"
-                 Stroke="Aquamarine" />
-        <TextBlock Name="BallCount" Text="x5" Canvas.Top="12" Canvas.Left="95" FontWeight="Bold" />
+        <Ellipse x:Name="BallCountEllipse" Canvas.Top="22" Canvas.Left="79" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Stroke="#FFB04141" >
+            <Ellipse.Fill>
+                <RadialGradientBrush GradientOrigin="0.7,0.3">
+                    <RadialGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1" ScaleX="1"/>
+                            <SkewTransform AngleY="0" AngleX="0"/>
+                            <RotateTransform Angle="0"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </RadialGradientBrush.RelativeTransform>
+                    <GradientStop Color="#FFF06617" Offset="1"/>
+                    <GradientStop Color="#FFE4AD37" Offset="0.58"/>
+                    <GradientStop Color="#FFE2DBCA"/>
+                </RadialGradientBrush>
+            </Ellipse.Fill>
+        </Ellipse>
+        <TextBlock Name="BallCount" Text="x5" Canvas.Top="24" Canvas.Left="104" FontWeight="Bold" />
+
     </Canvas>
 
 

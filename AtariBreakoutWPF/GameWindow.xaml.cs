@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Globalization;
+using System.Security.AccessControl;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using WPFCustomMessageBox;
 
 namespace AtariBreakoutWPF
 {
@@ -31,6 +33,7 @@ namespace AtariBreakoutWPF
             _paddleTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(0.7), DispatcherPriority.Background,
                 (sender, args) => _logic.MovePaddle(_direction), Dispatcher);
 
+
             _ballTimer.Start();
             KeyDown += Game_OnKeyDown;
             KeyUp += Game_OnKeyUp;
@@ -45,8 +48,20 @@ namespace AtariBreakoutWPF
             _ballTimer.Stop();
             KeyDown -= Game_OnKeyDown;
             KeyUp -= Game_OnKeyUp;
-            MessageBox.Show($"Game over\r\nYour score: {e.FinalScore}", "Game over", MessageBoxButton.OK,
-                MessageBoxImage.Exclamation);
+            
+            var exit = 
+                CustomMessageBox.ShowOKCancel($"Game over\r\nYour score: {e.FinalScore}", "Game over",  "Play again", "Exit", MessageBoxImage.Exclamation);
+            if (exit == MessageBoxResult.OK)
+            {
+                var form = new GameWindow();
+                this.Hide();
+                form.Show();
+                this.Close();
+            }
+            else
+            {
+                this.Close();
+            }
         }
 
         private void Game_OnBallDestroyed(object sender, BallDestroyedEventArgs e)
