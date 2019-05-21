@@ -28,13 +28,12 @@ namespace AtariBreakoutWPF
 
             _logic = new GameLogic(GameCanvas);
 
-            _ballTimer = new DispatcherTimer(new TimeSpan(70000), DispatcherPriority.Background,
+            _ballTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(0.7), DispatcherPriority.Background,
                 (sender, args) => _logic.Tick(), Dispatcher);
+
             _paddleTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(0.7), DispatcherPriority.Background,
                 (sender, args) => _logic.MovePaddle(_direction), Dispatcher);
 
-
-            _ballTimer.Start();
             KeyDown += Game_OnKeyDown;
             KeyUp += Game_OnKeyUp;
             _logic.GameCanvas.ScoreChanged += Game_OnScoreChanged;
@@ -44,8 +43,9 @@ namespace AtariBreakoutWPF
 
         private void Game_OnGameOver(object sender, GameOverEventArgs e)
         {
+            this.Deactivated -= Window_Deactivated;
             _paddleTimer.Stop();
-            _ballTimer.Stop();
+            Pause();
             KeyDown -= Game_OnKeyDown;
             KeyUp -= Game_OnKeyUp;
             
@@ -53,15 +53,33 @@ namespace AtariBreakoutWPF
                 CustomMessageBox.ShowOKCancel($"Game over\r\nYour score: {e.FinalScore}", "Game over",  "Play again", "Exit", MessageBoxImage.Exclamation);
             if (exit == MessageBoxResult.OK)
             {
-                var form = new GameWindow();
-                this.Hide();
-                form.Show();
-                this.Close();
+                RestartGame();
             }
             else
             {
                 this.Close();
             }
+        }
+
+        private void Pause()
+        {
+            _ballTimer.IsEnabled = false;
+            _paddleTimer.IsEnabled = false;
+        }
+
+        private void Unpause()
+        {
+            _ballTimer.IsEnabled = true;
+            _paddleTimer.IsEnabled = true;
+        }
+
+        private void RestartGame()
+        {
+            this.Deactivated -= Window_Deactivated;
+            var form = new GameWindow();
+            this.Hide();
+            form.Show();
+            this.Close();
         }
 
         private void Game_OnBallDestroyed(object sender, BallDestroyedEventArgs e)
@@ -85,9 +103,40 @@ namespace AtariBreakoutWPF
 
         private void Game_OnKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Left || e.Key == Key.Right) _direction = Direction.Default;
+            if (e.Key == Key.Left || e.Key == Key.Right)
+            {
+                _direction = Direction.Default;
+            }
+            else
+            {
+                _paddleTimer.Stop();
+            }
+        }
+        private void Window_Deactivated(object sender, EventArgs e)
+        {
+            Pause();
+            var pauseWindow = new PauseWindow
+            {
+                ShowInTaskbar = false,
+                ResizeMode = ResizeMode.NoResize,
+                Owner = this,
+            };
+            var pause = pauseWindow.ShowDialog();
+            if (pause == PauseResult.Exit)
+            {
+                Application.Current.Shutdown();
+            }
 
-            if (_direction != Direction.Default) _paddleTimer.Stop();
+            if (pause == PauseResult.Continue)
+            {
+                Unpause();
+            }
+
+            if (pause == PauseResult.Restart)
+            {
+                Unpause();
+                RestartGame();
+            }
         }
     }
 }

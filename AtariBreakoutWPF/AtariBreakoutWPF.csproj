@@ -69,6 +69,9 @@
     <Compile Include="GameCanvasBuilder.cs" />
     <Compile Include="GameOverEventArgs.cs" />
     <Compile Include="MovementLogic.cs" />
+    <Compile Include="PauseWindow.xaml.cs">
+      <DependentUpon>PauseWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ScoreChangedEventArgs.cs" />
     <Compile Include="Utility.cs" />
     <Page Include="GameWindow.xaml">
@@ -87,6 +90,10 @@
       <DependentUpon>GameWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PauseWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Paddle.cs" />

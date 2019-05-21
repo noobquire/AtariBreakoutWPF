@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Height="750" Width="950">
+        Title="MainWindow" Height="750" Width="950" Deactivated="Window_Deactivated">
 
     <Canvas Background="#FFFBF7F7">
         <Canvas Name="GameCanvas" Height="600" Width="800" Top="50" Left="75" >

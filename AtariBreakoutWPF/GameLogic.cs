@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Timers;
+using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace AtariBreakoutWPF
 {
@@ -6,9 +9,12 @@ namespace AtariBreakoutWPF
     {
         public readonly GameCanvas GameCanvas;
         private readonly MovementLogic _movementLogic;
+        //private readonly Timer _ballTimer;
 
         public GameLogic(Canvas gameCanvas)
         {
+            
+
             var gameCanvasBuilder = new GameCanvasBuilder(gameCanvas);
             gameCanvasBuilder.AddPaddle();
             gameCanvasBuilder.AddBricks();
