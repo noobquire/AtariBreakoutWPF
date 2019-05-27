@@ -76,7 +76,7 @@ namespace AtariBreakoutWPF
             if (direction == Direction.Default) return;
             var oldPosition = _gameCanvas.Paddle.Position;
             var ballPosition = _gameCanvas.Ball.Position;
-            double newXCoordinate = direction == Direction.Left ? oldPosition.X - 3 : oldPosition.X + 3;
+            double newXCoordinate = direction == Direction.Left ? oldPosition.X - 5 : oldPosition.X + 5;
             var newPaddlePosition = new Point(newXCoordinate, oldPosition.Y);
 
             if (_ballCollision.WithPaddle.Horizontal(ballPosition, newPaddlePosition)

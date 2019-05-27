@@ -9,6 +9,7 @@ namespace AtariBreakoutWPF
     public partial class PauseWindow : Window
     {
         private PauseResult _pauseResult;
+
         public PauseWindow()
         {
             InitializeComponent();
@@ -46,6 +47,7 @@ namespace AtariBreakoutWPF
 
     public enum PauseResult
     {
+        None,
         Continue,
         Restart,
         Exit

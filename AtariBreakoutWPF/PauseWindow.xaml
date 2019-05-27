@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AtariBreakoutWPF"
         mc:Ignorable="d"
-        Title="Game is paused" Height="230" Width="200">
+        Title="Game is paused" Height="230" Width="200" ShowInTaskbar="False" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>

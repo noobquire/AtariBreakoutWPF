@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Height="750" Width="950" Deactivated="Window_Deactivated">
+        Title="MainWindow" Height="750" Width="950" Deactivated="Window_Deactivated" Closing="Window_Closing">
 
     <Canvas Background="#FFFBF7F7">
         <Canvas Name="GameCanvas" Height="600" Width="800" Top="50" Left="75" >
@@ -32,7 +32,11 @@
                 </Ellipse.Fill>
             </Ellipse>
         </Canvas>
-        <Button Name="TestButton" Height="20" Width="50" Canvas.Top="10" Canvas.Left="10" Content="pause" />
+        <Button Name="PauseButton" Height="30" Width="30" Canvas.Top="10" Canvas.Left="10" Content="" Click="PauseButton_OnClick">
+            <Button.Background>
+                <ImageBrush ImageSource="Images/pause-button.png"/>
+            </Button.Background>
+        </Button>
         <TextBlock Name="Score" Canvas.Top="10" Canvas.Right="10" Text="Score: 0" FontWeight="Bold" FontSize="25" />
         <Ellipse x:Name="BallCountEllipse" Canvas.Top="22" Canvas.Left="79" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Stroke="#FFB04141" >
             <Ellipse.Fill>
