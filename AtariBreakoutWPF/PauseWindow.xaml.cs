@@ -47,7 +47,6 @@ namespace AtariBreakoutWPF
 
     public enum PauseResult
     {
-        None,
         Continue,
         Restart,
         Exit

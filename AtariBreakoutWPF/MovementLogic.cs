@@ -16,6 +16,12 @@ namespace AtariBreakoutWPF
             _gameCanvas = gameCanvas;
             _ballCollision = new BallCollision(_gameCanvas);
         }
+        
+        /// <summary>
+        /// Moves the ball for minimal distance on the game field for every point of its speed.
+        /// Also makes required checks to detect collisions between ball and paddle, bricks or walls.
+        /// If such collision is detected, the ball bounces accordingly.
+        /// </summary>
         public void MoveBall()
         {
             Point oldPosition;
@@ -53,10 +59,15 @@ namespace AtariBreakoutWPF
                 }
                 SetPosition(_gameCanvas.Ball.Shape, newPosition);
             }
-            
-
         }
-        private void CheckBallAccelerationConditions(Brick brick) // TODO: move this somewhere else, maybe to MovementLogic?
+        
+        /// <summary>
+        /// Checks required yo determine if the ball has to accelerate.
+        /// If it has to, it's speed is increased by constant amount.
+        /// Ball acceleration conditions are connected to hitting the bricks.
+        /// </summary>
+        /// <param name="brick">Bricks which is hit.</param>
+        private void CheckBallAccelerationConditions(Brick brick)
         {
             if (!_gameCanvas.Ball.RedBrickHit && brick.Color == Brick.BrickColor.Red)
             {
@@ -71,6 +82,14 @@ namespace AtariBreakoutWPF
             }
             if (_gameCanvas.Ball.HitCount == 4 || _gameCanvas.Ball.HitCount == 12) _gameCanvas.Ball.Speed += BouncyBall.Acceleration;
         }
+        
+        /// <summary>
+        /// Moves the paddle fro minimal distance on the game field.
+        /// Also checks if the new position of the paddle may collide with the ball.
+        /// If so, then the movement of the paddle is stopped until the ball moves out of the way.
+        /// </summary>
+        /// Direction at which the paddle has to be moved.
+        /// <param name="direction"></param>
         public void MovePaddle(Direction direction)
         {
             if (direction == Direction.Default) return;
@@ -84,7 +103,15 @@ namespace AtariBreakoutWPF
             if (newPaddlePosition.X < _gameCanvas.Width - _gameCanvas.Paddle.Width && newPaddlePosition.X > 0)
                 SetPosition(_gameCanvas.Paddle.Shape, newPaddlePosition);
         }
-
+        
+        /// <summary>
+        /// Determines if the ball collides with any brick.
+        /// If so, the brick is destroyed.
+        /// </summary>
+        /// <param name="newPosition">New position of the ball.</param>
+        /// <param name="oldPosition">Old position of the ball.</param>
+        /// <param name="bounceDirection">Direction at which the ball would bounce off the brick.</param>
+        /// <returns></returns>
         private bool BrickCollision(Point newPosition, Point oldPosition, out Direction bounceDirection)
         {
             bounceDirection = Direction.Default;
@@ -109,6 +136,18 @@ namespace AtariBreakoutWPF
             }
             return false;
         }
+        
+        /// <summary>
+        /// Determines if the ball collides with the paddle.
+        /// If so, distance from center of top horizontal edge
+        /// of the paddle is calculated for ball to bounce.
+        /// </summary>
+        /// <param name="newPosition">New position of the ball.</param>
+        /// <param name="oldPosition">Old position of the ball.</param>
+        /// <param name="distanceFromCenterOfPaddle">Distance from the point where ball touches
+        /// the paddle to the center of vertical edge of paddle.</param>
+        /// <param name="bounceDirection">Direction at which the ball has to bounce off the paddle.</param>
+        /// <returns></returns>
         private bool PaddleCollision(Point newPosition, Point oldPosition, out double distanceFromCenterOfPaddle, out Direction bounceDirection)
         {
             var centerOfPaddleX = _gameCanvas.Paddle.Position.X + _gameCanvas.Paddle.Width / 2;
@@ -117,7 +156,7 @@ namespace AtariBreakoutWPF
             bounceDirection = Direction.Default;
             if (_ballCollision.WithPaddle.VerticalAndHorizontal(newPosition, paddlePosition))
             {
-                if (_ballCollision.WithPaddle.Vertical(oldPosition))
+                if (_ballCollision.WithPaddle.OnlyVertical(oldPosition))
                 {
                     distanceFromCenterOfPaddle = _gameCanvas.Paddle.Width / 2;
                     bounceDirection = Direction.Vertical;
@@ -135,6 +174,14 @@ namespace AtariBreakoutWPF
             }
             return false;
         }
+        
+        /// <summary>
+        /// Determines if the ball collides with the walls.
+        /// If so, direction at which the ball has to bounce is determined.
+        /// </summary>
+        /// <param name="newPosition"></param>
+        /// <param name="bounceDirection"></param>
+        /// <returns></returns>
         private bool WallCollision(Point newPosition, out Direction bounceDirection)
         {
             bounceDirection = Direction.Default;

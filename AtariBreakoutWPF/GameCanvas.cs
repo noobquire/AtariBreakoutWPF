@@ -6,18 +6,28 @@ using System.Windows.Shapes;
 
 namespace AtariBreakoutWPF
 {
-    // TODO: write basic documentation for GameCanvas
     /// <summary>
-    /// Represents a game field on which ball 
+    /// Represents a game field where ball and paddle can move
     /// </summary>
     public class GameCanvas
     {
+        /// <summary>
+        /// Game bricks which are currently on game field
+        /// </summary>
         public readonly IList<Brick> Bricks = new List<Brick>();
+        /// <summary>
+        /// UI container which holds all visual parts of game elements
+        /// </summary>
         public readonly Canvas Canvas;
+        /// <summary>
+        /// Game ball which bounces off obstacles and destroys bricks
+        /// </summary>
         public BouncyBall Ball;
-
+        /// <summary>
+        /// Moving platform controlled by the player
+        /// </summary>
         public Paddle Paddle;
-
+        
         public GameCanvas(Canvas canvas)
         {
             Canvas = canvas;
@@ -38,7 +48,7 @@ namespace AtariBreakoutWPF
         {
             if (BallCount <= 0)
             {
-                OnGameOver(new GameOverEventArgs(Score));
+                OnGameOver(new GameOverEventArgs(Score, GameOverReason.Lost));
                 return;
             }
 
@@ -73,6 +83,7 @@ namespace AtariBreakoutWPF
             brick.Shape = null;
             Score += brick.ScoreForDestruction;
             OnScoreChanged(new ScoreChangedEventArgs(Score));
+            if(Bricks.Count == 0) OnGameOver(new GameOverEventArgs(Score, GameOverReason.Won));
         }
 
 

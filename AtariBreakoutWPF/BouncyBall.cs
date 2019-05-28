@@ -5,6 +5,10 @@ using System.Windows.Shapes;
 
 namespace AtariBreakoutWPF
 {
+    /// <summary>
+    /// Represents a game ball which moves on the game field,
+    /// bounces off obstacles and destroys bricks.
+    /// </summary>
     public sealed class BouncyBall
     {
         public BouncyBall(Vector moveVector, Ellipse shape, int speed)
@@ -14,6 +18,10 @@ namespace AtariBreakoutWPF
             Speed = speed;
         }
 
+        /// <summary>
+        /// Amount at which the ball accelerates
+        /// every time when acceleration condition is met
+        /// </summary>
         public const int Acceleration = 1;
 
         /// <summary>
@@ -22,7 +30,7 @@ namespace AtariBreakoutWPF
         public Vector MoveVector { get; private set; }
 
         /// <summary>
-        /// Actual shape of the ball which is added on the canvas
+        /// Actual shape of the ball which is added to the canvas
         /// </summary>
         public Ellipse Shape { get; set; }
 

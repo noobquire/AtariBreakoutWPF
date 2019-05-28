@@ -10,12 +10,7 @@ namespace AtariBreakoutWPF.CollisionDetection
         {
             _gameCanvas = gameCanvas;
         }
-
-        public static implicit operator bool(WallCollision wallCollision)
-        {
-            return true;
-        }
-
+        
         public bool Top(Point newPosition)
         {
             return newPosition.Y <= 0;

@@ -1,8 +1,11 @@
 namespace AtariBreakoutWPF.CollisionDetection
 {
+    /// <summary>
+    /// Represents logic required to detect collisions
+    /// between the ball and obstacles on the game field.
+    /// </summary>
     public class BallCollision
     {
-        private GameCanvas _gameCanvas;
         public WallCollision OutBounds;
         public BrickCollision WithBrick;
         public PaddleCollision WithPaddle;
@@ -12,7 +15,6 @@ namespace AtariBreakoutWPF.CollisionDetection
             OutBounds = new WallCollision(gameCanvas);
             WithBrick = new BrickCollision(gameCanvas);
             WithPaddle = new PaddleCollision(gameCanvas);
-            _gameCanvas = gameCanvas;
         }
     }
 }

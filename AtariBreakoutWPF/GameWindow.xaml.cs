@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Eventing.Reader;
-using System.Globalization;
-using System.Security.AccessControl;
-using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -16,7 +12,6 @@ namespace AtariBreakoutWPF
     public partial class GameWindow
     {
         private readonly DispatcherTimer _ballTimer;
-        private readonly GameLogic _logic;
         private readonly DispatcherTimer _paddleTimer;
         private bool _paused;
         private Direction _direction = Direction.Default;
@@ -25,65 +20,81 @@ namespace AtariBreakoutWPF
         {
             InitializeComponent();
 
-            _logic = new GameLogic(GameCanvas);
+            var logic = new GameLogic(GameCanvas);
 
             _ballTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(0.7), DispatcherPriority.Background,
-                (sender, args) => _logic.Tick(), Dispatcher);
+                (sender, args) => logic.Tick(), Dispatcher);
 
             _paddleTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(0.5), DispatcherPriority.Background,
-                (sender, args) => _logic.MovePaddle(_direction), Dispatcher);
+                (sender, args) => logic.MovePaddle(_direction), Dispatcher);
 
             KeyDown += Game_OnKeyDown;
             KeyUp += Game_OnKeyUp;
-            _logic.GameCanvas.ScoreChanged += Game_OnScoreChanged;
-            _logic.GameCanvas.BallDestroyed += Game_OnBallDestroyed;
-            _logic.GameCanvas.GameOver += Game_OnGameOver;
+            logic.GameCanvas.ScoreChanged += Game_OnScoreChanged;
+            logic.GameCanvas.BallDestroyed += Game_OnBallDestroyed;
+            logic.GameCanvas.GameOver += Game_OnGameOver;
         }
 
         private void Game_OnGameOver(object sender, GameOverEventArgs e)
         {
-            this.Deactivated -= Window_Deactivated;
+            Deactivated -= Window_Deactivated;
             _paddleTimer.Stop();
             Pause();
             KeyDown -= Game_OnKeyDown;
             KeyUp -= Game_OnKeyUp;
 
-            var exit =
-                CustomMessageBox.ShowOKCancel($"Game over\r\nYour score: {e.FinalScore}", "Game over", "Play again", "Exit", MessageBoxImage.Exclamation);
-            if (exit == MessageBoxResult.OK)
+            if (e.Reason == GameOverReason.Lost)
             {
-                RestartGame();
-            }
-            else
+                var exit =
+                                CustomMessageBox.ShowOKCancel($"You lost your last ball\r\nYour score: {e.FinalScore}", "Game over", "Play again", "Exit", MessageBoxImage.Exclamation);
+                            if (exit == MessageBoxResult.OK)
+                            {
+                                RestartGame();
+                            }
+                            else
+                            {
+                                Close();
+                            }
+            } else if (e.Reason == GameOverReason.Won)
             {
-                Close();
+                var exit =
+                    CustomMessageBox.ShowOKCancel($"\r\nCongratulations, you won!\r\nYour score: {e.FinalScore}", "Game finished", "Play again", "Exit", MessageBoxImage.Exclamation);
+                if (exit == MessageBoxResult.OK)
+                {
+                    RestartGame();
+                }
+                else
+                {
+                    Close();
+                }
             }
+            
         }
 
         private void Pause()
         {
             _ballTimer.IsEnabled = false;
-            _paddleTimer.IsEnabled = false;
+            KeyDown -= Game_OnKeyDown;
             _paused = true;
         }
 
         private void Unpause()
         {
             _ballTimer.IsEnabled = true;
-            _paddleTimer.IsEnabled = true;
+            KeyDown += Game_OnKeyDown;
             Application.Current.MainWindow = this;
             _paused = false;
         }
 
         private void RestartGame()
         {
-            this.Closing -= Window_Closing;
-            this.Deactivated -= Window_Deactivated;
+            Closing -= Window_Closing;
+            Deactivated -= Window_Deactivated;
             var form = new GameWindow();
-            this.Hide();
+            Hide();
             form.Show();
             Application.Current.MainWindow = form;
-            this.Close();
+            Close();
         }
 
         private void Game_OnBallDestroyed(object sender, BallDestroyedEventArgs e)
@@ -129,13 +140,13 @@ namespace AtariBreakoutWPF
 
         private void ShowPauseWindow()
         {
-            this.Deactivated -= Window_Deactivated;
+            Deactivated -= Window_Deactivated;
             Pause();
             var window = new PauseWindow();
 
             window.Owner = this;
-            window.Top = this.Top + this.Height / 2 - window.Height / 2;
-            window.Left = this.Left + this.Width / 2 - window.Width / 2;
+            window.Top = Top + Height / 2 - window.Height / 2;
+            window.Left = Left + Width / 2 - window.Width / 2;
             window.Closing += (s, e) => Unpause();
 
 
@@ -148,7 +159,7 @@ namespace AtariBreakoutWPF
             if (pause == PauseResult.Continue)
             {
                 Unpause();
-                this.Deactivated += Window_Deactivated;
+                Deactivated += Window_Deactivated;
             }
 
             if (pause == PauseResult.Restart)

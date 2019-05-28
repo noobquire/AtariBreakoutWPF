@@ -11,13 +11,13 @@ namespace AtariBreakoutWPF.CollisionDetection
             _gameCanvas = gameCanvas;
         }
 
-        public bool Horizontal(Point ballPosition)
+        public bool OnlyHorizontal(Point ballPosition)
         {
             return Vertical(ballPosition, _gameCanvas.Paddle.Position) &&
                    !Horizontal(ballPosition, _gameCanvas.Paddle.Position);
         }
 
-        public bool Vertical(Point ballPosition)
+        public bool OnlyVertical(Point ballPosition)
         {
             return Horizontal(ballPosition, _gameCanvas.Paddle.Position) &&
                    !Vertical(ballPosition, _gameCanvas.Paddle.Position);
