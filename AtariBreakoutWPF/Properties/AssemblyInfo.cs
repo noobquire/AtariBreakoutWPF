@@ -5,12 +5,16 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AtariBreakoutWPF")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Breakout Game")]
+[assembly: AssemblyDescription("This is a simple clone of Breakout made as my first year coursework for software engineering degree at Kyiv Polytechnic Institute." +
+                               " Original game was made by Steven Wozniak for Atari game consoles in 1976." +
+                               "\n\rThe goal of the game is to destroy all the bricks an top of the game field with ball that bounces off obstacles" +
+                               "by hitting it with paddle at the the bottom of the screen. Be careful, if the ball moves by your paddle out of the lower" +
+                               "bound of game field, you lose it. Overall you have 1 ball at start of the game and 5 in reserve. Good luck and have fun!")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("AtariBreakoutWPF")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCompany("Kyiv Polytechnic Institute")]
+[assembly: AssemblyProduct("Breakout")]
+[assembly: AssemblyCopyright("Copyright © Alexey Litvinov 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -11,9 +11,11 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Button Name="ContinueButton" Click="ContinueButton_OnClick" Grid.Row="0" Content="Continue" Height="30" Width="180"/>
         <Button Name="RestartButton" Click="RestartButton_OnClick" Grid.Row="1" Content="Restart game" Height="30" Width="180"/>
-        <Button Name="ExitButton" Click="ExitButton_OnClick" Grid.Row="2" Content="Exit" Height="30" Width="180"/>
+        <Button Name="AboutButton" Click="AboutButton_OnClick" Grid.Row="2" Content="About game" Height="30" Width="180"/>
+        <Button Name="ExitButton" Click="ExitButton_OnClick" Grid.Row="3" Content="Exit" Height="30" Width="180"/>
     </Grid>
 </Window>

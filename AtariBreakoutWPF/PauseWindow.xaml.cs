@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using Gat.Controls;
 
 namespace AtariBreakoutWPF
 {
@@ -42,6 +43,13 @@ namespace AtariBreakoutWPF
                 _pauseResult = PauseResult.Exit;
                 DialogResult = true;
             }
+        }
+
+        private void AboutButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var aboutBox = new About();
+            aboutBox.AdditionalNotes = "";
+            aboutBox.Show();
         }
     }
 
